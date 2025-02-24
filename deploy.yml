@@ -1,0 +1,45 @@
+version: '3.8'
+
+services:
+  nextjs:
+    image: ${DOCKER_REGISTRY}/${DOCKER_REGISTRY_OWNER}/${DOCKER_APP_NAME}:${IMAGE_TAG}
+
+    deploy:
+      labels:
+        # loki
+        - "logging=promtail"
+        - "logging_jobname=containerlogs"
+
+        - "traefik.enable=true"
+        - "traefik.http.routers.test-hack-nextjs.rule=Host(`fsp-hub.ru`) || Host(`www.fsp-hub.ru`)"
+        - "traefik.http.routers.test-hack-nextjs.entrypoints=https,http"
+        - "traefik.http.routers.test-hack-nextjs.tls.certresolver=myresolver"
+        - "traefik.http.services.test-hack-nextjs.loadbalancer.server.port=3000"
+        - "traefik.http.routers.test-hack-nextjs.tls=true"
+        - "traefik.docker.network=traefik-public"
+        - "traefik.docker.lbswarm=true"
+        - "traefik.http.routers.test-hack-nextjs.service=test-hack-nextjs"
+
+
+      replicas: 2
+      update_config:
+        parallelism: 3
+        order: start-first
+        failure_action: rollback
+        delay: 10s
+      rollback_config:
+        parallelism: 0
+        order: stop-first
+      restart_policy:
+        condition: any
+        delay: 20s
+        max_attempts: 5
+        window: 120s
+
+    networks:
+      - "traefik"
+
+networks:
+  traefik:
+    name: traefik-public
+    external: true
