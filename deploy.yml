@@ -11,12 +11,12 @@ services:
         - "logging_jobname=containerlogs"
 
         - "traefik.enable=true"
-        - "traefik.http.routers.test-hack-nextjs.rule=Host(`fsp-hub.ru`) || Host(`www.fsp-hub.ru`)"
+        - "traefik.http.routers.test-hack-nextjs.rule=Host(`hack.vingp.dev`) || Host(`www.hack.vingp.dev`)"
         - "traefik.http.routers.test-hack-nextjs.entrypoints=https,http"
         - "traefik.http.routers.test-hack-nextjs.tls.certresolver=myresolver"
         - "traefik.http.services.test-hack-nextjs.loadbalancer.server.port=3000"
         - "traefik.http.routers.test-hack-nextjs.tls=true"
-        - "traefik.docker.network=traefik-public"
+        - "traefik.docker.network=traefik-swarm"
         - "traefik.docker.lbswarm=true"
         - "traefik.http.routers.test-hack-nextjs.service=test-hack-nextjs"
 
@@ -41,5 +41,5 @@ services:
 
 networks:
   traefik:
-    name: traefik-public
+    name: traefik-swarm
     external: true
