@@ -1,0 +1,15 @@
+{
+  "target": {
+    "nextjs": {
+      "cache-from": [
+        "type=registry,ref=registry.gitlab.com/test-hack12345/frontend:cache"
+      ],
+      "cache-to": [
+        "type=registry,ref=registry.gitlab.com/test-hack12345/frontend:cache"
+      ],
+      "output": [
+        "type=docker"
+      ]
+    }
+  }
+}
