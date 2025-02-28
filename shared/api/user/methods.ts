@@ -1,4 +1,3 @@
-import { IAgent, UserStatus } from '@/app/root/requests/types'
 import { userHttp as http } from '../common'
 import { LoginRequest, ResetPassword, SignupRequest, UpdateUserRequest, User } from './types'
 

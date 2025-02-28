@@ -1,4 +1,3 @@
-import { IAgent, UserStatus } from '@/app/root/requests/types'
 import { API } from '../api'
 import {
   User,
