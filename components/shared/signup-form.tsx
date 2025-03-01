@@ -65,7 +65,7 @@ export const SignUpForm: React.FC<Props> = ({ onSubmit, className }) => {
           render={({ field }) => (
             <FormItem>
               <FormLabel>
-                <Title>Фамилия</Title>
+                <Title size="xs">Фамилия</Title>
               </FormLabel>
               <FormControl>
                 <Input {...field} type="text" />
@@ -80,7 +80,7 @@ export const SignUpForm: React.FC<Props> = ({ onSubmit, className }) => {
           render={({ field }) => (
             <FormItem>
               <FormLabel>
-                <Title>Имя</Title>
+                <Title size="xs">Имя</Title>
               </FormLabel>
               <FormControl>
                 <Input {...field} type="text" />
@@ -95,7 +95,7 @@ export const SignUpForm: React.FC<Props> = ({ onSubmit, className }) => {
           render={({ field }) => (
             <FormItem>
               <FormLabel>
-                <Title>Отчество</Title>
+                <Title size="xs">Отчество</Title>
               </FormLabel>
               <FormControl>
                 <Input {...field} type="text" />
@@ -110,7 +110,7 @@ export const SignUpForm: React.FC<Props> = ({ onSubmit, className }) => {
           render={({ field }) => (
             <FormItem>
               <FormLabel>
-                <Title>Дата рождения</Title>
+                <Title size="xs">Дата рождения</Title>
               </FormLabel>
               <FormControl>
                 <Popover>
@@ -141,7 +141,7 @@ export const SignUpForm: React.FC<Props> = ({ onSubmit, className }) => {
           render={({ field }) => (
             <FormItem>
               <FormLabel>
-                <Title>Электронная почта</Title>
+                <Title size="xs">Электронная почта</Title>
               </FormLabel>
               <FormControl>
                 <Input {...field} type="email" />
@@ -156,7 +156,7 @@ export const SignUpForm: React.FC<Props> = ({ onSubmit, className }) => {
           render={({ field }) => (
             <FormItem>
               <FormLabel>
-                <Title>Пароль</Title>
+                <Title size="xs">Пароль</Title>
               </FormLabel>
               <FormControl>
                 <Input placeholder="" {...field} type="password" />
@@ -171,7 +171,7 @@ export const SignUpForm: React.FC<Props> = ({ onSubmit, className }) => {
           render={({ field }) => (
             <FormItem>
               <FormLabel>
-                <Title>Повторите пароль</Title>
+                <Title size="xs">Повторите пароль</Title>
               </FormLabel>
               <FormControl>
                 <Input placeholder="" {...field} type="password" />
