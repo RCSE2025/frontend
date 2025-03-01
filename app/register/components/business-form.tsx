@@ -1,5 +1,6 @@
 'use client'
 
+import { Title } from '@/components/shared/title'
 import { Button } from '@/components/ui/button'
 import {
   Form,
@@ -10,50 +11,38 @@ import {
   FormMessage
 } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectTrigger,
+  SelectValue
+} from '@/components/ui/select'
 import { cn } from '@/lib/utils'
 import { z } from '@/lib/zod'
-import { SignupRequest } from '@/shared/api/user/types'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { format } from 'date-fns'
-import { ru } from 'date-fns/locale'
+import React from 'react'
 import { useForm } from 'react-hook-form'
-import { Calendar } from '../ui/calendar'
-import { Popover, PopoverContent, PopoverTrigger } from '../ui/popover'
-import { Title } from './title'
 
-const roles = {
-  SPORTSMAN: 'Спортсмен',
-  AGENT: 'Представитель'
-}
-
-const formSchema = z
-  .object({
-    email: z.string().email(),
-    name: z.string(),
-    surname: z.string(),
-    patronymic: z.string(),
-    date_of_birth: z.date(),
-    role: z.enum(Object.keys(roles) as [keyof typeof roles]),
-    password: z.string().min(4),
-    confirm: z.string().min(4)
-  })
-  .refine((data) => data.password === data.confirm, {
-    message: 'Пароли не совпадают',
-    path: ['confirm']
-  })
+const formSchema = z.object({
+  country: z.string(),
+  INN: z.number(),
+  KPP: z.number(),
+  OGRN: z.number(),
+  short_name: z.string(),
+  full_name: z.string(),
+  owner: z.string()
+})
 
 interface Props {
-  onSubmit: (request: SignupRequest) => void
+  onSubmit: () => void
   className?: string
 }
 
-export const SignUpForm: React.FC<Props> = ({ onSubmit, className }) => {
+export const RegisterBusinessForm: React.FC<Props> = ({ onSubmit, className }) => {
   const form = useForm<z.infer<typeof formSchema>>({
-    resolver: zodResolver(formSchema),
-    defaultValues: {
-      date_of_birth: new Date(),
-      role: 'SPORTSMAN'
-    }
+    resolver: zodResolver(formSchema)
   })
 
   return (
@@ -61,11 +50,37 @@ export const SignUpForm: React.FC<Props> = ({ onSubmit, className }) => {
       <form onSubmit={form.handleSubmit(onSubmit)} className={cn('space-y-8', className)}>
         <FormField
           control={form.control}
-          name="surname"
+          name="country"
           render={({ field }) => (
             <FormItem>
               <FormLabel>
-                <Title>Фамилия</Title>
+                <Title className="text-slate-400" size="xs">
+                  Страна регистрации
+                </Title>
+              </FormLabel>
+              <FormControl>
+                <Select disabled>
+                  <SelectTrigger>
+                    <SelectValue placeholder="Российская Федерация" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectGroup>
+                      <SelectItem value="РФ">Российская Федерация</SelectItem>
+                    </SelectGroup>
+                  </SelectContent>
+                </Select>
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={form.control}
+          name="INN"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>
+                <Title size="xs">ИНН</Title>
               </FormLabel>
               <FormControl>
                 <Input {...field} type="text" />
@@ -76,14 +91,14 @@ export const SignUpForm: React.FC<Props> = ({ onSubmit, className }) => {
         />
         <FormField
           control={form.control}
-          name="name"
+          name="KPP"
           render={({ field }) => (
             <FormItem>
               <FormLabel>
-                <Title>Имя</Title>
+                <Title size="xs">КПП</Title>
               </FormLabel>
               <FormControl>
-                <Input {...field} type="text" />
+                <Input {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -91,14 +106,30 @@ export const SignUpForm: React.FC<Props> = ({ onSubmit, className }) => {
         />
         <FormField
           control={form.control}
-          name="patronymic"
+          name="OGRN"
           render={({ field }) => (
             <FormItem>
               <FormLabel>
-                <Title>Отчество</Title>
+                <Title size="xs">ОГРН</Title>
               </FormLabel>
               <FormControl>
-                <Input {...field} type="text" />
+                <Input {...field} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
+        <FormField
+          control={form.control}
+          name="short_name"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>
+                <Title size="xs">Краткое наименование продавца</Title>
+              </FormLabel>
+              <FormControl>
+                <Input {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -106,30 +137,14 @@ export const SignUpForm: React.FC<Props> = ({ onSubmit, className }) => {
         />
         <FormField
           control={form.control}
-          name="date_of_birth"
+          name="full_name"
           render={({ field }) => (
             <FormItem>
               <FormLabel>
-                <Title>Дата рождения</Title>
+                <Title size="xs">Полное наименование продавца</Title>
               </FormLabel>
               <FormControl>
-                <Popover>
-                  <PopoverTrigger className="w-full">
-                    <Input value={format(field.value, 'dd-MM-yyyy')} readOnly></Input>
-                  </PopoverTrigger>
-                  <PopoverContent className="w-auto p-0" align="start">
-                    <Calendar
-                      mode="single"
-                      initialFocus
-                      captionLayout="dropdown-buttons"
-                      fromYear={1960}
-                      toDate={new Date()}
-                      onSelect={(date) => field.onChange(date)}
-                      selected={field.value}
-                      locale={ru}
-                    />
-                  </PopoverContent>
-                </Popover>
+                <Input {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -137,51 +152,21 @@ export const SignUpForm: React.FC<Props> = ({ onSubmit, className }) => {
         />
         <FormField
           control={form.control}
-          name="email"
+          name="owner"
           render={({ field }) => (
             <FormItem>
               <FormLabel>
-                <Title>Электронная почта</Title>
+                <Title size="xs">ФИО руководителя</Title>
               </FormLabel>
               <FormControl>
-                <Input {...field} type="email" />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <FormField
-          control={form.control}
-          name="password"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>
-                <Title>Пароль</Title>
-              </FormLabel>
-              <FormControl>
-                <Input placeholder="" {...field} type="password" />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <FormField
-          control={form.control}
-          name="confirm"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>
-                <Title>Повторите пароль</Title>
-              </FormLabel>
-              <FormControl>
-                <Input placeholder="" {...field} type="password" />
+                <Input {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>
           )}
         />
         <Button type="submit" className="bg-theme w-full text-white">
-          Зарегистрироваться
+          Сохранить
         </Button>
       </form>
     </Form>

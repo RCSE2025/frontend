@@ -1,1 +1,1 @@
-export const USERS_API = process.env.NEXT_PUBLIC_USERS_API_URL || 'https://users.fsp-hub.ru'
+export const USERS_API = 'https://backend-go.hack.vingp.dev/docs/index.html'
