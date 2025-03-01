@@ -1,5 +1,5 @@
 import { userHttp as http } from '../common'
-import { IProduct, IProductFilterOptions } from './types'
+import { ICategory, IProduct, IProductFilterOptions } from './types'
 
 export const getAllProductsFilter = async (
   filters?: IProductFilterOptions
@@ -19,6 +19,16 @@ export const getProductById = async (productId: string): Promise<IProduct> => {
     return response.data
   } catch (error) {
     console.error(`Error fetching product with ID ${productId}:`, error)
+    throw error
+  }
+}
+
+export const getCategories = async (): Promise<ICategory[]> => {
+  try {
+    const response = await http.get('/product/categories')
+    return response.data
+  } catch (error) {
+    console.error('Error fetching categories:', error)
     throw error
   }
 }

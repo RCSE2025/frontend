@@ -28,7 +28,7 @@ export const Ton: React.FC<SendProps> = ({ amount, onSend, className }) => {
                 messages: [
                   {
                     address: RECEIVER_ADDRESS,
-                    amount: (amount * 1e9).toString()
+                    amount: Math.floor(amount * 1e9).toString()
                   }
                 ]
               })

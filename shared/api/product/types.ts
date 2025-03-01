@@ -77,3 +77,11 @@ export interface IProductFilterOptions {
   min_price?: number
   max_price?: number
 }
+
+export interface ICategory {
+  id: ProductCategory.FASHION
+  title: string
+  image: string
+  link: string
+  category: ProductCategory.FASHION
+}
