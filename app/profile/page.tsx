@@ -1,85 +1,37 @@
 'use client'
 
 import { Container } from '@/components/shared/container'
-import { Title } from '@/components/shared/title'
-import { Separator } from '@/components/ui/separator'
-import { ChartNoAxesCombined, CircleHelp } from 'lucide-react'
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
+import { ShoppingBag, User } from 'lucide-react'
 import { useRouter } from 'next/navigation'
-import React from 'react'
-import { toast } from 'sonner'
-import { UsersTable } from './UsersTables/UsersTable'
-import { columns } from './UsersTables/columns'
-import EquationIcon from './components/EquationIcon'
+import { OrderHistory } from './components/order-history'
+import { UserProfile } from './components/user-profile'
 
-export default function LK() {
-  // const {
-  //   selfEventStatistics: statistics,
-  //   selfSummary: summary,
-  //   getSelfEventsStatistics,
-  //   getSelfSummary
-  // } = useStatistics()
+export default function Profile() {
+  const router = useRouter()
 
-  // const router = useRouter()
+  return (
+    <Container className="p-5">
+      <Tabs defaultValue="profile" className="w-full">
+        <TabsList className="mb-6">
+          <TabsTrigger value="profile">
+            <User className="h-4 w-4 mr-2" />
+            Профиль
+          </TabsTrigger>
+          <TabsTrigger value="orders">
+            <ShoppingBag className="h-4 w-4 mr-2" />
+            История покупок
+          </TabsTrigger>
+        </TabsList>
 
-  // const getData = React.useCallback(async () => {
-  //   Promise.all([getSelfEventsStatistics(), getSelfSummary()]).catch((err) => {
-  //     toast.error('Не удалось получить информацию о пользователе')
-  //     router.push('/')
-  //   })
-  // }, [])
+        <TabsContent value="profile" className="mt-0">
+          <UserProfile />
+        </TabsContent>
 
-  // React.useEffect(() => {
-  //   getData().catch((err) => {})
-  // }, [])
-
-  // return (
-  //   statistics &&
-  //   summary && (
-  // <Container className="p-5">
-  {
-    /* <div className="w-full flex flex-col items-center justify-center mb-5">
-          <Title size="xs">Участие в соревнованиях</Title>
-          <HeatMap
-            className="p-5 w-[55%]"
-            values={statistics?.map((s) => ({
-              date: new Date(s.event.end_at),
-              count: s.points
-            }))}
-          />
-        </div>
-        <Separator />
-        <div className="flex flex-col gap-2 mt-5 mb-5">
-          <div className="flex flex-row items-center gap-1">
-            <Title size="xs">Уникальный рейтинг спортсмена:</Title>
-            <div className="self-center flex flex-row">
-              <ChartNoAxesCombined />
-              <span className="text-lg">{summary?.final_rating.toFixed(0)}</span>
-            </div>
-          </div>
-          <div>
-            <Title size="xs" className="flex flex-row gap-1">
-              <CircleHelp />
-              Как мы считаем Ваш рейтинг?
-            </Title>
-          </div>
-          <div>
-            <EquationIcon className="dark:invert" />
-            <Title size="xs" className="flex flex-col gap-1 mt-5">
-              Таким образом, если спортсмен показывает высокие результаты в сложных и актуальных
-              соревнованиях, его рейтинг будет высок. Если же результаты старые или получены в
-              слабых по уровню мероприятиях, их вклад будет ниже.
-            </Title>
-          </div>
-        </div>
-        <Separator />
-        <Title className="mt-5" size="xs">
-          Результаты
-        </Title>
-        <UsersTable columns={columns} data={statistics} /> */
-  }
-  //     </Container>
-  //   )
-  // )
-
-  return <></>
+        <TabsContent value="orders" className="mt-0">
+          <OrderHistory />
+        </TabsContent>
+      </Tabs>
+    </Container>
+  )
 }

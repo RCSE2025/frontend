@@ -1,4 +1,6 @@
 import { userApi } from './user'
+import { productApi } from './product'
+import { orderApi } from './order'
 import { Ticket } from './ticket'
 import { MockAPI } from './mock'
 

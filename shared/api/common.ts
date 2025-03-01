@@ -5,8 +5,12 @@ export const userHttp = axios.create({
   baseURL: USERS_API
 })
 
+export const orderHttp = axios.create({
+  baseURL: USERS_API
+})
+
 //
-;[userHttp].forEach((http) =>
+;[userHttp, orderHttp].forEach((http) =>
   http.interceptors.request.use(function (config) {
     const access_token = localStorage.getItem('access_token')
 
