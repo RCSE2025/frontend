@@ -80,9 +80,10 @@ export const updateUser = async (user: UpdateUserRequest) => {
 export const resetPassword = async (request: ResetPassword) => {
   const formData = new FormData()
 
-  formData.append('new_password', request.new_password)
+  formData.append('token', request.token)
+  formData.append('password', request.password)
 
-  await http.post('/user/refresh/password')
+  await http.post('/user/password/reset', formData)
 }
 
 export const sendResetPasswordEmail = async (email: string) => {

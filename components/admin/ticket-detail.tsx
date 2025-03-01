@@ -186,31 +186,6 @@ export const TicketDetail = ({ ticketId }: TicketDetailProps) => {
             </div>
 
             <div>
-              <p className="text-sm font-medium">Приоритет</p>
-              {isAdmin ? (
-                <Select
-                  value={priority || 'MEDIUM'}
-                  onValueChange={(value: string) => handlePriorityChange(value)}
-                >
-                  <SelectTrigger>
-                    <SelectValue placeholder="Выберите приоритет" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {Object.entries(ticketPriorityMap).map(([key, value]) => (
-                      <SelectItem key={key} value={key}>
-                        {value}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              ) : (
-                <Badge className={getPriorityBadgeColor(currentTicket.priority)}>
-                  {ticketPriorityMap[currentTicket.priority]}
-                </Badge>
-              )}
-            </div>
-
-            <div>
               <p className="text-sm font-medium">Создан</p>
               <p>
                 {format(new Date(currentTicket.createdAt), 'dd MMMM yyyy HH:mm', { locale: ru })}

@@ -21,16 +21,16 @@ import { InputOTP, InputOTPGroup, InputOTPSeparator, InputOTPSlot } from '../ui/
 
 const formSchema = z
   .object({
-    new_password: z.string().min(4),
+    password: z.string().min(4),
     confirm: z.string().min(4)
   })
-  .refine((data) => data.new_password === data.confirm, {
+  .refine((data) => data.password === data.confirm, {
     message: 'Пароли не совпадают',
     path: ['confirm']
   })
 
 interface Props {
-  onSubmit: (request: { new_password: string }) => void
+  onSubmit: (request: { password: string }) => void
   className?: string
 }
 
@@ -44,7 +44,7 @@ export const ResetPasswordForm: React.FC<Props> = ({ onSubmit, className }) => {
       <form onSubmit={form.handleSubmit(onSubmit)} className={cn('space-y-8', className)}>
         <FormField
           control={form.control}
-          name="new_password"
+          name="password"
           render={({ field }) => (
             <FormItem>
               <FormLabel>

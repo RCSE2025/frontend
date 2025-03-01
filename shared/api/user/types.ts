@@ -40,6 +40,6 @@ export interface UpdateUserRequest {
 }
 
 export interface ResetPassword {
-  new_password: string
+  password: string
   token: string
 }
