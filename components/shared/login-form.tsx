@@ -38,12 +38,21 @@ interface Props {
 
 export const LoginForm: React.FC<Props> = ({ onSubmit, className, onResetPassword }) => {
   const form = useForm<z.infer<typeof formSchema>>({
-    resolver: zodResolver(formSchema)
+    resolver: zodResolver(formSchema),
+    defaultValues: {
+      confirm: false
+    }
   })
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className={cn('space-y-8', className)}>
+      <form
+        onSubmit={form.handleSubmit(onSubmit, (err) => {
+          console.error(err)
+          console.log(form.getValues())
+        })}
+        className={cn('space-y-8', className)}
+      >
         <FormField
           control={form.control}
           name="username"
@@ -79,15 +88,24 @@ export const LoginForm: React.FC<Props> = ({ onSubmit, className, onResetPasswor
           name="confirm"
           render={({ field }) => (
             <FormItem>
-              <div className="flex items-center space-x-2">
-                <Checkbox id="terms" onChange={(e: any) => (field.value = e.target.checked)} />
-                <label
-                  htmlFor="terms"
-                  className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-                >
-                  Соглашаюсь с правилами пользования торговой площадкой и возврата
-                </label>
-              </div>
+              <FormControl>
+                <div className="flex items-center space-x-2">
+                  <Checkbox
+                    id="terms"
+                    onCheckedChange={(e) => {
+                      form.setValue('confirm', e as boolean)
+                      console.log(field)
+                    }}
+                  />
+                  <label
+                    htmlFor="terms"
+                    className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                  >
+                    Соглашаюсь с правилами пользования торговой площадкой и возврата
+                  </label>
+                </div>
+              </FormControl>
+              <FormMessage />
             </FormItem>
           )}
         />
