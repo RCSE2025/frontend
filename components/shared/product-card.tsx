@@ -8,7 +8,7 @@ import { cn } from '@/lib/utils'
 
 interface ProductCardProps extends React.HTMLAttributes<HTMLDivElement> {
   product: {
-    id: number
+    id: number | string
     title: string
     price: number
     rating: number
