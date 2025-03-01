@@ -1,8 +1,8 @@
-import { userApi } from './user'
-import { productApi } from './product'
+import { productApi } from './business-panel'
+import { MockAPI } from './mock'
 import { orderApi } from './order'
 import { Ticket } from './ticket'
-import { MockAPI } from './mock'
+import { userApi } from './user'
 
 // Use mock API for development
 const useMockAPI = true
