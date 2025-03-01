@@ -9,7 +9,6 @@ import Image from 'next/image'
 import Link from 'next/link'
 import React, { Suspense } from 'react'
 import './globals.css'
-import React from 'react'
 import { TonProvider } from '@/components/shared/ton'
 
 const inter = Inter({ subsets: ['latin', 'cyrillic'] })
@@ -37,35 +36,35 @@ export default function RootLayout({
     <html lang="en">
       <body className={cn(inter.className, 'bg-secondary-background')}>
         <Sonner />
-          <Header className="bg-background">
-            <Link href="/" className="flex items-center gap-2">
-              <Image
-                src="/logo.svg"
-                alt="FSPHub Logo"
-                width={32}
-                height={32}
-                priority
-                className="dark:hidden"
-              />
-              <Image
-                src="/logo.svg"
-                alt="FSPHub Logo"
-                width={32}
-                height={32}
-                priority
-                className="hidden dark:block"
-              />
-            </Link>
-            <div className="flex items-center justify-between gap-5 flex-col md:flex-row">
-              <Links />
-            </div>
-          </Header>
-        
-          <TonProvider>
-            <Suspense>
-              <main className="min-h-[calc(100vh-78px)]">{children}</main> {modal}
-            </Suspense>
-          </TonProvider>
+        <Header className="bg-background">
+          <Link href="/" className="flex items-center gap-2">
+            <Image
+              src="/logo.svg"
+              alt="FSPHub Logo"
+              width={32}
+              height={32}
+              priority
+              className="dark:hidden"
+            />
+            <Image
+              src="/logo.svg"
+              alt="FSPHub Logo"
+              width={32}
+              height={32}
+              priority
+              className="hidden dark:block"
+            />
+          </Link>
+          <div className="flex items-center justify-between gap-5 flex-col md:flex-row">
+            <Links />
+          </div>
+        </Header>
+
+        <TonProvider>
+          <Suspense>
+            <main className="min-h-[calc(100vh-78px)]">{children}</main> {modal}
+          </Suspense>
+        </TonProvider>
       </body>
     </html>
   )

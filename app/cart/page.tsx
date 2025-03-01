@@ -4,9 +4,12 @@ import { Container } from '@/components/shared/container'
 import { ProductSection } from '@/components/shared/product-section'
 import { Button } from '@/components/ui/button'
 import { useCart } from '@/shared/store/useCart'
+import { useRouter } from 'next/navigation'
 import React from 'react'
 
 export default function Cart() {
+  const router = useRouter()
+
   const testProducts = [
     {
       id: '5',
@@ -31,7 +34,7 @@ export default function Cart() {
 
   return (
     <Container>
-      <Button>Оформить заказ</Button>
+      <Button onClick={() => router.push('/pay')}>Оформить заказ</Button>
       <ProductSection products={testProducts} title="Корзина" type="cart" />
     </Container>
   )

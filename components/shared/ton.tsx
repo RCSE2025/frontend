@@ -9,16 +9,18 @@ import { Button } from '../ui/button'
 interface SendProps {
   amount: number
   onSend: (tx: string) => void
+  className?: string
 }
 
-export const Ton: React.FC<SendProps> = ({ amount, onSend }) => {
+export const Ton: React.FC<SendProps> = ({ amount, onSend, className }) => {
   const wallet = useTonWallet()
   const [tonConnectUi] = useTonConnectUI()
 
   return (
-    <div>
+    <div className={className}>
       {wallet ? (
         <Button
+          className="w-full"
           onClick={() =>
             tonConnectUi
               .sendTransaction({
@@ -41,7 +43,7 @@ export const Ton: React.FC<SendProps> = ({ amount, onSend }) => {
           Оплатить в TON
         </Button>
       ) : (
-        <Button onClick={() => tonConnectUi.openModal()} className="bg-theme text-white">
+        <Button onClick={() => tonConnectUi.openModal()} className="bg-theme text-white w-full">
           Подключить TON
         </Button>
       )}
