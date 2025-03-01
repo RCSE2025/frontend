@@ -75,3 +75,11 @@ export interface IProductFilterOptions {
   on_sale?: boolean
   sort_by?: 'price-asc' | 'price-desc' | 'rating' | 'newest'
 }
+
+export interface ICategory {
+  id: ProductCategory.FASHION
+  title: string
+  image: string
+  link: string
+  category: ProductCategory.FASHION
+}

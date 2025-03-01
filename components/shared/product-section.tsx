@@ -11,7 +11,7 @@ interface ProductSectionProps extends React.HTMLAttributes<HTMLDivElement> {
   viewAllLink?: string
   type?: 'cart' | 'catalog'
   products: Array<{
-    id: string
+    id: string | number
     title: string
     price: number
     rating: number
