@@ -2408,6 +2408,11 @@
     "@types/d3-interpolate" "^2"
     "@types/d3-selection" "^2"
 
+"@types/dadata-api@^0.0.3":
+  version "0.0.3"
+  resolved "https://registry.yarnpkg.com/@types/dadata-api/-/dadata-api-0.0.3.tgz#ae925663e247c3df0ef97a8852d1549fef350b5b"
+  integrity sha512-gBMCyfjPJItZppEw0PV35YW5KPJ5dts9PCuiKDUpYMDydFQIg1Nqss6x5fVbj0jfkK5XsvU9oCrmUxXDN16D7A==
+
 "@types/date-arithmetic@*":
   version "4.1.4"
   resolved "https://registry.npmjs.org/@types/date-arithmetic/-/date-arithmetic-4.1.4.tgz"
@@ -5319,6 +5324,7 @@ streamsearch@^1.1.0:
   integrity sha512-Mcc5wHehp9aXz1ax6bZUyY5afg9u2rv5cqQI3mRrYkGC8rW2hM02jWuwjtL++LS5qinSyhj2QfLyNsuc+VsExg==
 
 "string-width-cjs@npm:string-width@^4.2.0", string-width@^4.1.0:
+  name string-width-cjs
   version "4.2.3"
   resolved "https://registry.npmjs.org/string-width/-/string-width-4.2.3.tgz"
   integrity sha512-wKyQRQpjJ0sIp62ErSZdGsjMJWsap5oRNihHhu6G7JVO/9jIB6UyevL+tXuOqrng8j/cxKTWyWUwvSTriiZz/g==

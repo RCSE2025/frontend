@@ -5,7 +5,14 @@ import { useUser } from '@/shared/store/useUser'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card'
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle
+} from '@/components/ui/card'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { UpdateUserRequest, User } from '@/shared/api/user/types'
 import { Separator } from '@/components/ui/separator'
@@ -18,41 +25,53 @@ import { cn } from '@/lib/utils'
 import { z } from 'zod'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form'
+import {
+  Form,
+  FormControl,
+  FormDescription,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage
+} from '@/components/ui/form'
 import { toast } from 'sonner'
+import { useRouter } from 'next/navigation'
 
 const formSchema = z.object({
   name: z.string().min(2, {
-    message: 'Имя должно содержать не менее 2 символов',
+    message: 'Имя должно содержать не менее 2 символов'
   }),
   surname: z.string().min(2, {
-    message: 'Фамилия должна содержать не менее 2 символов',
+    message: 'Фамилия должна содержать не менее 2 символов'
   }),
   patronymic: z.string().optional(),
   email: z.string().email({
-    message: 'Введите корректный email',
+    message: 'Введите корректный email'
   }),
   date_of_birth: z.date({
-    required_error: 'Пожалуйста, выберите дату рождения',
-  }),
+    required_error: 'Пожалуйста, выберите дату рождения'
+  })
 })
 
-const PasswordFormSchema = z.object({
-  currentPassword: z.string().min(8, {
-    message: 'Пароль должен содержать не менее 8 символов',
-  }),
-  newPassword: z.string().min(8, {
-    message: 'Пароль должен содержать не менее 8 символов',
-  }),
-  confirmPassword: z.string().min(8, {
-    message: 'Пароль должен содержать не менее 8 символов',
-  }),
-}).refine((data) => data.newPassword === data.confirmPassword, {
-  message: 'Пароли не совпадают',
-  path: ['confirmPassword'],
-})
+const PasswordFormSchema = z
+  .object({
+    currentPassword: z.string().min(8, {
+      message: 'Пароль должен содержать не менее 8 символов'
+    }),
+    newPassword: z.string().min(8, {
+      message: 'Пароль должен содержать не менее 8 символов'
+    }),
+    confirmPassword: z.string().min(8, {
+      message: 'Пароль должен содержать не менее 8 символов'
+    })
+  })
+  .refine((data) => data.newPassword === data.confirmPassword, {
+    message: 'Пароли не совпадают',
+    path: ['confirmPassword']
+  })
 
 export function UserProfile() {
+  const router = useRouter()
   const { user, patchUser } = useUser()
   const [isEditing, setIsEditing] = useState(false)
   const [isChangingPassword, setIsChangingPassword] = useState(false)
@@ -66,8 +85,8 @@ export function UserProfile() {
       surname: user.surname || '',
       patronymic: user.patronymic || '',
       email: user.email || '',
-      date_of_birth: user.date_of_birth ? new Date(user.date_of_birth) : new Date(),
-    },
+      date_of_birth: user.date_of_birth ? new Date(user.date_of_birth) : new Date()
+    }
   })
 
   const passwordForm = useForm<z.infer<typeof PasswordFormSchema>>({
@@ -75,8 +94,8 @@ export function UserProfile() {
     defaultValues: {
       currentPassword: '',
       newPassword: '',
-      confirmPassword: '',
-    },
+      confirmPassword: ''
+    }
   })
 
   useEffect(() => {
@@ -86,7 +105,7 @@ export function UserProfile() {
         surname: user.surname || '',
         patronymic: user.patronymic || '',
         email: user.email || '',
-        date_of_birth: user.date_of_birth ? new Date(user.date_of_birth) : new Date(),
+        date_of_birth: user.date_of_birth ? new Date(user.date_of_birth) : new Date()
       })
     }
   }, [user, form])
@@ -95,7 +114,7 @@ export function UserProfile() {
     if (e.target.files && e.target.files[0]) {
       const file = e.target.files[0]
       setAvatarFile(file)
-      
+
       const reader = new FileReader()
       reader.onload = (e) => {
         if (e.target?.result) {
@@ -113,17 +132,17 @@ export function UserProfile() {
         surname: values.surname,
         patronymic: values.patronymic || '',
         email: values.email,
-        date_of_birth: values.date_of_birth,
+        date_of_birth: values.date_of_birth
       }
-      
+
       await patchUser(updateData)
-      
+
       // Здесь должна быть логика для загрузки аватара, если он был изменен
       if (avatarFile) {
         // Пример: await uploadAvatar(avatarFile)
         console.log('Загрузка аватара:', avatarFile)
       }
-      
+
       toast.success('Профиль успешно обновлен')
       setIsEditing(false)
     } catch (error) {
@@ -137,7 +156,7 @@ export function UserProfile() {
       // Здесь должна быть логика для смены пароля
       // Пример: await changePassword(values.currentPassword, values.newPassword)
       console.log('Смена пароля:', values)
-      
+
       toast.success('Пароль успешно изменен')
       setIsChangingPassword(false)
       passwordForm.reset()
@@ -160,7 +179,10 @@ export function UserProfile() {
           <div className="flex items-center space-x-4 mb-6">
             <Avatar className="h-20 w-20">
               <AvatarImage src={avatarPreview || undefined} alt={user.name} />
-              <AvatarFallback>{user.name?.charAt(0)}{user.surname?.charAt(0)}</AvatarFallback>
+              <AvatarFallback>
+                {user.name?.charAt(0)}
+                {user.surname?.charAt(0)}
+              </AvatarFallback>
             </Avatar>
             {isEditing && (
               <div>
@@ -168,11 +190,11 @@ export function UserProfile() {
                   <div className="bg-primary text-primary-foreground hover:bg-primary/90 px-4 py-2 rounded-md">
                     Загрузить фото
                   </div>
-                  <Input 
-                    id="avatar" 
-                    type="file" 
-                    accept="image/*" 
-                    className="hidden" 
+                  <Input
+                    id="avatar"
+                    type="file"
+                    accept="image/*"
+                    className="hidden"
                     onChange={handleAvatarChange}
                   />
                 </Label>
@@ -202,8 +224,8 @@ export function UserProfile() {
                 <div>
                   <Label>Дата рождения</Label>
                   <div className="font-medium">
-                    {user.date_of_birth 
-                      ? format(new Date(user.date_of_birth), 'PPP', { locale: ru }) 
+                    {user.date_of_birth
+                      ? format(new Date(user.date_of_birth), 'PPP', { locale: ru })
                       : '—'}
                   </div>
                 </div>
@@ -213,11 +235,12 @@ export function UserProfile() {
                 </div>
               </div>
               <div className="flex space-x-4 mt-6">
-                <Button onClick={() => setIsEditing(true)}>
-                  Редактировать профиль
-                </Button>
+                <Button onClick={() => setIsEditing(true)}>Редактировать профиль</Button>
                 <Button variant="outline" onClick={() => setIsChangingPassword(true)}>
                   Сменить пароль
+                </Button>
+                <Button variant="outline" onClick={() => router.push('/pasport')}>
+                  Подтвердить паспорт
                 </Button>
               </div>
             </div>
@@ -287,14 +310,14 @@ export function UserProfile() {
                           <PopoverTrigger asChild>
                             <FormControl>
                               <Button
-                                variant={"outline"}
+                                variant={'outline'}
                                 className={cn(
-                                  "w-full pl-3 text-left font-normal",
-                                  !field.value && "text-muted-foreground"
+                                  'w-full pl-3 text-left font-normal',
+                                  !field.value && 'text-muted-foreground'
                                 )}
                               >
                                 {field.value ? (
-                                  format(field.value, "PPP", { locale: ru })
+                                  format(field.value, 'PPP', { locale: ru })
                                 ) : (
                                   <span>Выберите дату</span>
                                 )}
@@ -308,7 +331,7 @@ export function UserProfile() {
                               selected={field.value}
                               onSelect={field.onChange}
                               disabled={(date) =>
-                                date > new Date() || date < new Date("1900-01-01")
+                                date > new Date() || date < new Date('1900-01-01')
                               }
                               initialFocus
                             />
@@ -368,7 +391,11 @@ export function UserProfile() {
                       <FormItem>
                         <FormLabel>Подтверждение пароля</FormLabel>
                         <FormControl>
-                          <Input type="password" placeholder="Подтвердите новый пароль" {...field} />
+                          <Input
+                            type="password"
+                            placeholder="Подтвердите новый пароль"
+                            {...field}
+                          />
                         </FormControl>
                         <FormMessage />
                       </FormItem>
@@ -376,7 +403,11 @@ export function UserProfile() {
                   />
                   <div className="flex space-x-4 mt-6">
                     <Button type="submit">Сменить пароль</Button>
-                    <Button variant="outline" type="button" onClick={() => setIsChangingPassword(false)}>
+                    <Button
+                      variant="outline"
+                      type="button"
+                      onClick={() => setIsChangingPassword(false)}
+                    >
                       Отмена
                     </Button>
                   </div>

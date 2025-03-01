@@ -21,28 +21,34 @@ import {
 } from '@/components/ui/select'
 import { cn } from '@/lib/utils'
 import { z } from '@/lib/zod'
+import { getBusinessInfo } from '@/shared/api/business/methods'
+import { CreateBusiness } from '@/shared/api/business/types'
 import { zodResolver } from '@hookform/resolvers/zod'
 import React from 'react'
 import { useForm } from 'react-hook-form'
 
 const formSchema = z.object({
   country: z.string(),
-  INN: z.number(),
-  KPP: z.number(),
-  OGRN: z.number(),
+  inn: z.number(),
+  kpp: z.number(),
+  ogrn: z.number(),
   short_name: z.string(),
   full_name: z.string(),
-  owner: z.string()
+  owner: z.string(),
+  address: z.string()
 })
 
 interface Props {
-  onSubmit: () => void
+  onSubmit: (data: CreateBusiness) => void
   className?: string
 }
 
 export const RegisterBusinessForm: React.FC<Props> = ({ onSubmit, className }) => {
   const form = useForm<z.infer<typeof formSchema>>({
-    resolver: zodResolver(formSchema)
+    resolver: zodResolver(formSchema),
+    defaultValues: {
+      country: 'Российская Федерация'
+    }
   })
 
   return (
@@ -61,11 +67,11 @@ export const RegisterBusinessForm: React.FC<Props> = ({ onSubmit, className }) =
               <FormControl>
                 <Select disabled>
                   <SelectTrigger>
-                    <SelectValue placeholder="Российская Федерация" />
+                    <SelectValue placeholder={field.value} />
                   </SelectTrigger>
                   <SelectContent>
                     <SelectGroup>
-                      <SelectItem value="РФ">Российская Федерация</SelectItem>
+                      <SelectItem value="РФ">{field.value}</SelectItem>
                     </SelectGroup>
                   </SelectContent>
                 </Select>
@@ -76,14 +82,40 @@ export const RegisterBusinessForm: React.FC<Props> = ({ onSubmit, className }) =
         />
         <FormField
           control={form.control}
-          name="INN"
+          name="inn"
           render={({ field }) => (
             <FormItem>
               <FormLabel>
                 <Title size="xs">ИНН</Title>
               </FormLabel>
               <FormControl>
-                <Input {...field} type="text" />
+                <Input
+                  value={field.value}
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter') {
+                      e.preventDefault()
+
+                      getBusinessInfo(field.value).then((data) => {
+                        if (data) {
+                          const info = data.data
+
+                          form.setValue('short_name', info.name.short_with_opf)
+                          form.setValue('full_name', info.name.full_with_opf)
+                          form.setValue('owner', info.management?.name || '')
+                          form.setValue('ogrn', Number(info.ogrn))
+                          form.setValue('kpp', Number(info.kpp))
+                          form.setValue('address', info.address.value)
+                        }
+                      })
+                    }
+                  }}
+                  onChange={(e) => {
+                    const value = e.target.value
+
+                    form.setValue('inn', Number(value))
+                  }}
+                  type="text"
+                />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -91,7 +123,7 @@ export const RegisterBusinessForm: React.FC<Props> = ({ onSubmit, className }) =
         />
         <FormField
           control={form.control}
-          name="KPP"
+          name="kpp"
           render={({ field }) => (
             <FormItem>
               <FormLabel>
@@ -106,7 +138,7 @@ export const RegisterBusinessForm: React.FC<Props> = ({ onSubmit, className }) =
         />
         <FormField
           control={form.control}
-          name="OGRN"
+          name="ogrn"
           render={({ field }) => (
             <FormItem>
               <FormLabel>
@@ -142,6 +174,21 @@ export const RegisterBusinessForm: React.FC<Props> = ({ onSubmit, className }) =
             <FormItem>
               <FormLabel>
                 <Title size="xs">Полное наименование продавца</Title>
+              </FormLabel>
+              <FormControl>
+                <Input {...field} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={form.control}
+          name="address"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>
+                <Title size="xs">Адрес регистрации</Title>
               </FormLabel>
               <FormControl>
                 <Input {...field} />

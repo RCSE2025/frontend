@@ -1,8 +1,9 @@
 export enum UserRole {
-  USER = 'USER',
-  SUPPORT = 'SUPPORT',
-  ROOT = 'ROOT',
-  SELLER = 'SELLER'
+  USER = 'user',
+  SUPPORT = 'support',
+  ROOT = 'admin',
+  SELLER = 'business',
+  SELF_EMPLOYED = 'self-employed'
 }
 
 export interface User {
@@ -12,6 +13,7 @@ export interface User {
   email: string
   patronymic: string
   date_of_birth: Date
+  is_pasport_verified: boolean
   role: string
 }
 
