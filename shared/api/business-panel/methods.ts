@@ -3,7 +3,7 @@ import { IProduct } from '../product'
 
 export const createProduct = async (request: any): Promise<IProduct> => {
   try {
-    const response = await http.post('/products', request)
+    const response = await http.post('/product', request)
     return response.data
   } catch (error) {
     console.error('Error creating product:', error)
@@ -32,13 +32,19 @@ export const deleteProduct = async (productId: number): Promise<void> => {
   }
 }
 
-// Загрузка изображения товара
-export const uploadProductImage = async (request: any): Promise<string> => {
+// Загрузка файлов товара
+export const uploadProductFiles = async (request: {
+  files: File[]
+  productId: number
+}): Promise<string> => {
   try {
     const formData = new FormData()
-    formData.append('image', request.image)
+    request.files.forEach((file) => formData.append('upload', file))
 
-    const response = await http.post(`/products/${request.productId}/images`, formData, {
+    const response = await http.post(`/product/images/upload`, formData, {
+      params: {
+        product_id: request.productId
+      },
       headers: {
         'Content-Type': 'multipart/form-data'
       }
