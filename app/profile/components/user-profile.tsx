@@ -14,7 +14,7 @@ import {
   CardTitle
 } from '@/components/ui/card'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
-import { UpdateUserRequest, User } from '@/shared/api/user/types'
+import { UpdateUserRequest, User, UserRole, userRoleMap } from '@/shared/api/user/types'
 import { Separator } from '@/components/ui/separator'
 import { Calendar } from '@/components/ui/calendar'
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
@@ -177,13 +177,13 @@ export function UserProfile() {
         </CardHeader>
         <CardContent>
           <div className="flex items-center space-x-4 mb-6">
-            <Avatar className="h-20 w-20">
+            {/* <Avatar className="h-20 w-20">
               <AvatarImage src={avatarPreview || undefined} alt={user.name} />
               <AvatarFallback>
                 {user.name?.charAt(0)}
                 {user.surname?.charAt(0)}
               </AvatarFallback>
-            </Avatar>
+            </Avatar> */}
             {isEditing && (
               <div>
                 <Label htmlFor="avatar" className="cursor-pointer">
@@ -231,7 +231,7 @@ export function UserProfile() {
                 </div>
                 <div>
                   <Label>Роль</Label>
-                  <div className="font-medium">{user.role}</div>
+                  <div className="font-medium">{userRoleMap[user.role as UserRole]}</div>
                 </div>
               </div>
               <div className="flex space-x-4 mt-6">

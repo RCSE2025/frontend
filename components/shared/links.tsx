@@ -3,7 +3,7 @@
 import { cn } from '@/lib/utils'
 import { UserRole } from '@/shared/api/user/types'
 import { useUser } from '@/shared/store/useUser'
-import { BriefcaseBusiness, FileSliders, ShoppingBag } from 'lucide-react'
+import { BriefcaseBusiness, FileSliders, ShoppingBag, ShoppingCart } from 'lucide-react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import React from 'react'
@@ -104,6 +104,19 @@ export const Links: React.FC<Props> = ({ className }) => {
           </Title>
         </Link>
       )}
+
+      <Link href="/cart">
+        <Title
+          size="xs"
+          className={cn('flex flex-row gap-1 items-center', {
+            underline: pathname.startsWith('/cart'),
+            'bg-transparent': !pathname.startsWith('/cart')
+          })}
+        >
+          <ShoppingCart />
+          Корзина
+        </Title>
+      </Link>
     </Container>
   )
 }

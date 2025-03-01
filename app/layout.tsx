@@ -9,6 +9,7 @@ import Image from 'next/image'
 import Link from 'next/link'
 import React, { Suspense } from 'react'
 import './globals.css'
+import { TonProvider } from '@/components/shared/ton'
 
 const inter = Inter({ subsets: ['latin', 'cyrillic'] })
 
@@ -58,9 +59,12 @@ export default function RootLayout({
             <Links />
           </div>
         </Header>
-        <Suspense>
-          <main className="min-h-[calc(100vh-78px)]">{children}</main> {modal}
-        </Suspense>
+
+        <TonProvider>
+          <Suspense>
+            <main className="min-h-[calc(100vh-78px)]">{children}</main> {modal}
+          </Suspense>
+        </TonProvider>
       </body>
     </html>
   )

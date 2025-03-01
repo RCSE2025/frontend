@@ -1,13 +1,15 @@
-import Link from 'next/link'
 import * as React from 'react'
+import Link from 'next/link'
 
-import { ProductCard } from '@/components/shared/product-card'
-import { Button } from '@/components/ui/button'
 import { cn } from '@/lib/utils'
+import { Button } from '@/components/ui/button'
+import { ProductCard } from '@/components/shared/product-card'
+import { CartProduct } from './cart-product'
 
 interface ProductSectionProps extends React.HTMLAttributes<HTMLDivElement> {
   title: string
   viewAllLink?: string
+  type?: 'cart' | 'catalog'
   products: Array<{
     id: string | number
     title: string
@@ -16,6 +18,7 @@ interface ProductSectionProps extends React.HTMLAttributes<HTMLDivElement> {
     image: string
     discount?: number
     category?: string
+    quantity?: number
   }>
   layout?: 'grid' | 'carousel'
   columns?: 2 | 3 | 4 | 5 | 6
@@ -26,6 +29,7 @@ export function ProductSection({
   viewAllLink,
   products,
   layout = 'grid',
+  type = 'catalog',
   columns = 4,
   className,
   ...props
@@ -54,9 +58,13 @@ export function ProductSection({
           columns === 6 && 'grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6'
         )}
       >
-        {products.map((product) => (
-          <ProductCard key={product.id} product={product} />
-        ))}
+        {products.map((product) =>
+          type === 'cart' ? (
+            <CartProduct key={product.id} product={product} />
+          ) : (
+            <ProductCard key={product.id} product={product} />
+          )
+        )}
       </div>
     </section>
   )

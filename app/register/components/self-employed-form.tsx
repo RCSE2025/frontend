@@ -21,8 +21,7 @@ import {
 } from '@/components/ui/select'
 import { cn } from '@/lib/utils'
 import { z } from '@/lib/zod'
-import { getBusinessInfo } from '@/shared/api/business/methods'
-import { CreateBusiness } from '@/shared/api/business/types'
+import { CheckSelfEmployed } from '@/shared/api/business/types'
 import { zodResolver } from '@hookform/resolvers/zod'
 import React from 'react'
 import { useForm } from 'react-hook-form'
@@ -33,7 +32,7 @@ const formSchema = z.object({
 })
 
 interface Props {
-  onSubmit: (data: any) => void
+  onSubmit: (data: CheckSelfEmployed) => void
   className?: string
 }
 
