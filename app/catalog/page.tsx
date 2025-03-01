@@ -68,7 +68,7 @@ export default function CatalogPage() {
         in_stock: filters.inStock,
         on_sale: filters.onSale,
         rating: filters.rating,
-        search_query: filters.searchQuery,
+        q: filters.searchQuery,
         sort_by: filters.sortBy,
         min_price: filters.priceRange?.min,
         max_price: filters.priceRange?.max

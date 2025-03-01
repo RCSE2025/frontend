@@ -67,7 +67,7 @@ export interface PriceRange {
 }
 
 export interface IProductFilterOptions {
-  search_query?: string
+  q?: string
   categories?: string
   brands?: string[]
   rating?: number
