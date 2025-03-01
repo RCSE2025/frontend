@@ -1,7 +1,9 @@
 import { userHttp as http } from '../common'
 import { IProduct, IProductFilterOptions } from './types'
 
-export const getAllProductsFilter = async (filters?: IProductFilterOptions): Promise<IProduct[]> => {
+export const getAllProductsFilter = async (
+  filters?: IProductFilterOptions
+): Promise<IProduct[]> => {
   try {
     const response = await http.get('/product/filter', { params: filters })
     return response.data

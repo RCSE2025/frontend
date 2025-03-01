@@ -1,14 +1,14 @@
-import * as React from "react"
-import { Check, ChevronDown, ChevronUp } from "lucide-react"
+import { Check, ChevronDown, ChevronUp } from 'lucide-react'
+import * as React from 'react'
 
-import { cn } from "@/lib/utils"
-import { Button } from "@/components/ui/button"
-import { Checkbox } from "@/components/ui/checkbox"
-import { Slider } from "@/components/ui/slider"
-import type { ProductFilters } from "@/shared/types"
-import { ProductCategory, productCategoryMap } from "@/shared/types"
-import { Separator } from "@/components/ui/separator"
-import { Badge } from "@/components/ui/badge"
+import { Badge } from '@/components/ui/badge'
+import { Button } from '@/components/ui/button'
+import { Checkbox } from '@/components/ui/checkbox'
+import { Separator } from '@/components/ui/separator'
+import { Slider } from '@/components/ui/slider'
+import { cn } from '@/lib/utils'
+import type { ProductFilters } from '@/shared/types'
+import { ProductCategory, productCategoryMap } from '@/shared/types'
 
 interface ProductFiltersProps {
   filters: ProductFilters
@@ -25,16 +25,16 @@ export function ProductFilters({
   onFilterChange,
   availableCategories = Object.values(ProductCategory),
   availableBrands = [],
-  minPrice = 0,
-  maxPrice = 10000,
-  className,
+  minPrice = 1,
+  maxPrice = 100_000_000,
+  className
 }: ProductFiltersProps) {
   const [expanded, setExpanded] = React.useState({
     categories: true,
     price: true,
     brands: true,
     rating: true,
-    other: true,
+    other: true
   })
 
   const toggleSection = (section: keyof typeof expanded) => {
@@ -45,10 +45,10 @@ export function ProductFilters({
     const updatedCategories = checked
       ? [...(filters.categories || []), category]
       : (filters.categories || []).filter((c) => c !== category)
-    
+
     onFilterChange({
       ...filters,
-      categories: updatedCategories.length > 0 ? updatedCategories : undefined,
+      categories: updatedCategories.length > 0 ? updatedCategories : undefined
     })
   }
 
@@ -57,8 +57,8 @@ export function ProductFilters({
       ...filters,
       priceRange: {
         min: value[0],
-        max: value[1],
-      },
+        max: value[1]
+      }
     })
   }
 
@@ -66,38 +66,38 @@ export function ProductFilters({
     const updatedBrands = checked
       ? [...(filters.brands || []), brand]
       : (filters.brands || []).filter((b) => b !== brand)
-    
+
     onFilterChange({
       ...filters,
-      brands: updatedBrands.length > 0 ? updatedBrands : undefined,
+      brands: updatedBrands.length > 0 ? updatedBrands : undefined
     })
   }
 
   const handleRatingChange = (rating: number) => {
     onFilterChange({
       ...filters,
-      rating: filters.rating === rating ? undefined : rating,
+      rating: filters.rating === rating ? undefined : rating
     })
   }
 
   const handleInStockChange = (checked: boolean) => {
     onFilterChange({
       ...filters,
-      inStock: checked || undefined,
+      inStock: checked || undefined
     })
   }
 
   const handleOnSaleChange = (checked: boolean) => {
     onFilterChange({
       ...filters,
-      onSale: checked || undefined,
+      onSale: checked || undefined
     })
   }
 
   const handleSortChange = (value: ProductFilters['sortBy']) => {
     onFilterChange({
       ...filters,
-      sortBy: value,
+      sortBy: value
     })
   }
 
@@ -106,13 +106,11 @@ export function ProductFilters({
   }
 
   const hasActiveFilters = Object.values(filters).some(
-    (value) => value !== undefined && (
-      !Array.isArray(value) || value.length > 0
-    )
+    (value) => value !== undefined && (!Array.isArray(value) || value.length > 0)
   )
 
   return (
-    <div className={cn("w-full space-y-4", className)}>
+    <div className={cn('w-full space-y-4', className)}>
       <div className="flex items-center justify-between">
         <h3 className="text-lg font-medium">Фильтры</h3>
         {hasActiveFilters && (
@@ -126,11 +124,7 @@ export function ProductFilters({
       {hasActiveFilters && (
         <div className="flex flex-wrap gap-2 mb-4">
           {filters.categories?.map((category) => (
-            <Badge 
-              key={category} 
-              variant="secondary"
-              className="flex items-center gap-1"
-            >
+            <Badge key={category} variant="secondary" className="flex items-center gap-1">
               {productCategoryMap[category]}
               <Button
                 variant="ghost"
@@ -156,11 +150,7 @@ export function ProductFilters({
             </Badge>
           )}
           {filters.brands?.map((brand) => (
-            <Badge 
-              key={brand} 
-              variant="secondary"
-              className="flex items-center gap-1"
-            >
+            <Badge key={brand} variant="secondary" className="flex items-center gap-1">
               {brand}
               <Button
                 variant="ghost"
@@ -221,7 +211,7 @@ export function ProductFilters({
         <Button
           variant="ghost"
           className="flex w-full items-center justify-between p-0 font-medium"
-          onClick={() => toggleSection("categories")}
+          onClick={() => toggleSection('categories')}
         >
           <span>Категории</span>
           {expanded.categories ? (
@@ -237,9 +227,7 @@ export function ProductFilters({
                 <Checkbox
                   id={`category-${category}`}
                   checked={filters.categories?.includes(category) || false}
-                  onCheckedChange={(checked) => 
-                    handleCategoryChange(category, checked as boolean)
-                  }
+                  onCheckedChange={(checked) => handleCategoryChange(category, checked as boolean)}
                 />
                 <label
                   htmlFor={`category-${category}`}
@@ -260,21 +248,17 @@ export function ProductFilters({
         <Button
           variant="ghost"
           className="flex w-full items-center justify-between p-0 font-medium"
-          onClick={() => toggleSection("price")}
+          onClick={() => toggleSection('price')}
         >
           <span>Цена</span>
-          {expanded.price ? (
-            <ChevronUp className="h-4 w-4" />
-          ) : (
-            <ChevronDown className="h-4 w-4" />
-          )}
+          {expanded.price ? <ChevronUp className="h-4 w-4" /> : <ChevronDown className="h-4 w-4" />}
         </Button>
         {expanded.price && (
           <div className="mt-4 px-2">
             <Slider
               defaultValue={[
                 filters.priceRange?.min || minPrice,
-                filters.priceRange?.max || maxPrice,
+                filters.priceRange?.max || maxPrice
               ]}
               min={minPrice}
               max={maxPrice}
@@ -283,12 +267,8 @@ export function ProductFilters({
               className="mb-6"
             />
             <div className="flex items-center justify-between">
-              <span className="text-sm">
-                {filters.priceRange?.min || minPrice} ₽
-              </span>
-              <span className="text-sm">
-                {filters.priceRange?.max || maxPrice} ₽
-              </span>
+              <span className="text-sm">{filters.priceRange?.min || minPrice} ₽</span>
+              <span className="text-sm">{filters.priceRange?.max || maxPrice} ₽</span>
             </div>
           </div>
         )}
@@ -303,7 +283,7 @@ export function ProductFilters({
             <Button
               variant="ghost"
               className="flex w-full items-center justify-between p-0 font-medium"
-              onClick={() => toggleSection("brands")}
+              onClick={() => toggleSection('brands')}
             >
               <span>Бренды</span>
               {expanded.brands ? (
@@ -319,9 +299,7 @@ export function ProductFilters({
                     <Checkbox
                       id={`brand-${brand}`}
                       checked={filters.brands?.includes(brand) || false}
-                      onCheckedChange={(checked) => 
-                        handleBrandChange(brand, checked as boolean)
-                      }
+                      onCheckedChange={(checked) => handleBrandChange(brand, checked as boolean)}
                     />
                     <label
                       htmlFor={`brand-${brand}`}
@@ -343,7 +321,7 @@ export function ProductFilters({
         <Button
           variant="ghost"
           className="flex w-full items-center justify-between p-0 font-medium"
-          onClick={() => toggleSection("rating")}
+          onClick={() => toggleSection('rating')}
         >
           <span>Рейтинг</span>
           {expanded.rating ? (
@@ -359,7 +337,7 @@ export function ProductFilters({
                 <Checkbox
                   id={`rating-${rating}`}
                   checked={filters.rating === rating}
-                  onCheckedChange={(checked) => 
+                  onCheckedChange={(checked) =>
                     checked ? handleRatingChange(rating) : handleRatingChange(0)
                   }
                 />
@@ -367,19 +345,23 @@ export function ProductFilters({
                   htmlFor={`rating-${rating}`}
                   className="flex items-center text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
                 >
-                  {Array(5).fill(0).map((_, i) => (
-                    <svg
-                      key={i}
-                      className={cn(
-                        "h-4 w-4",
-                        i < rating ? "text-yellow-400 fill-yellow-400" : "text-gray-300 fill-gray-300"
-                      )}
-                      xmlns="http://www.w3.org/2000/svg"
-                      viewBox="0 0 24 24"
-                    >
-                      <path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z" />
-                    </svg>
-                  ))}
+                  {Array(5)
+                    .fill(0)
+                    .map((_, i) => (
+                      <svg
+                        key={i}
+                        className={cn(
+                          'h-4 w-4',
+                          i < rating
+                            ? 'text-yellow-400 fill-yellow-400'
+                            : 'text-gray-300 fill-gray-300'
+                        )}
+                        xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 0 24 24"
+                      >
+                        <path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z" />
+                      </svg>
+                    ))}
                   <span className="ml-1">и выше</span>
                 </label>
               </div>
@@ -395,14 +377,10 @@ export function ProductFilters({
         <Button
           variant="ghost"
           className="flex w-full items-center justify-between p-0 font-medium"
-          onClick={() => toggleSection("other")}
+          onClick={() => toggleSection('other')}
         >
           <span>Другие фильтры</span>
-          {expanded.other ? (
-            <ChevronUp className="h-4 w-4" />
-          ) : (
-            <ChevronDown className="h-4 w-4" />
-          )}
+          {expanded.other ? <ChevronUp className="h-4 w-4" /> : <ChevronDown className="h-4 w-4" />}
         </Button>
         {expanded.other && (
           <div className="mt-2 space-y-2">
@@ -410,9 +388,7 @@ export function ProductFilters({
               <Checkbox
                 id="in-stock"
                 checked={filters.inStock || false}
-                onCheckedChange={(checked) => 
-                  handleInStockChange(checked as boolean)
-                }
+                onCheckedChange={(checked) => handleInStockChange(checked as boolean)}
               />
               <label
                 htmlFor="in-stock"
@@ -425,9 +401,7 @@ export function ProductFilters({
               <Checkbox
                 id="on-sale"
                 checked={filters.onSale || false}
-                onCheckedChange={(checked) => 
-                  handleOnSaleChange(checked as boolean)
-                }
+                onCheckedChange={(checked) => handleOnSaleChange(checked as boolean)}
               />
               <label
                 htmlFor="on-sale"
@@ -447,30 +421,30 @@ export function ProductFilters({
         <h3 className="mb-2 font-medium">Сортировка</h3>
         <div className="grid grid-cols-2 gap-2">
           <Button
-            variant={filters.sortBy === "price-asc" ? "default" : "outline"}
+            variant={filters.sortBy === 'price-asc' ? 'default' : 'outline'}
             size="sm"
-            onClick={() => handleSortChange("price-asc")}
+            onClick={() => handleSortChange('price-asc')}
           >
             Сначала дешевле
           </Button>
           <Button
-            variant={filters.sortBy === "price-desc" ? "default" : "outline"}
+            variant={filters.sortBy === 'price-desc' ? 'default' : 'outline'}
             size="sm"
-            onClick={() => handleSortChange("price-desc")}
+            onClick={() => handleSortChange('price-desc')}
           >
             Сначала дороже
           </Button>
           <Button
-            variant={filters.sortBy === "rating" ? "default" : "outline"}
+            variant={filters.sortBy === 'rating' ? 'default' : 'outline'}
             size="sm"
-            onClick={() => handleSortChange("rating")}
+            onClick={() => handleSortChange('rating')}
           >
             По рейтингу
           </Button>
           <Button
-            variant={filters.sortBy === "newest" ? "default" : "outline"}
+            variant={filters.sortBy === 'newest' ? 'default' : 'outline'}
             size="sm"
-            onClick={() => handleSortChange("newest")}
+            onClick={() => handleSortChange('newest')}
           >
             Новинки
           </Button>

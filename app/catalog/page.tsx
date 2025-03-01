@@ -61,13 +61,17 @@ export default function CatalogPage() {
     setError(null)
     try {
       const filterOptions: IProductFilterOptions = {
-        categories: filters.categories,
+        categories: filters.categories
+          ? decodeURI(filters.categories.map((e) => e.toString()).join(','))
+          : undefined,
         brands: filters.brands,
         in_stock: filters.inStock,
         on_sale: filters.onSale,
         rating: filters.rating,
-        search_query: filters.searchQuery,
-        sort_by: filters.sortBy
+        q: filters.searchQuery,
+        sort_by: filters.sortBy,
+        min_price: filters.priceRange?.min,
+        max_price: filters.priceRange?.max
       }
 
       const response = await productApi.getAllProductsFilter(filterOptions)
@@ -162,8 +166,8 @@ export default function CatalogPage() {
               onFilterChange={handleFilterChange}
               availableCategories={Object.values(ProductCategory)}
               availableBrands={availableBrands}
-              minPrice={0}
-              maxPrice={2000}
+              minPrice={1}
+              maxPrice={100000}
             />
           </div>
 
