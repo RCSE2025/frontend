@@ -68,10 +68,12 @@ export interface PriceRange {
 
 export interface IProductFilterOptions {
   search_query?: string
-  categories?: ProductCategory[]
+  categories?: string
   brands?: string[]
   rating?: number
   in_stock?: boolean
   on_sale?: boolean
   sort_by?: 'price-asc' | 'price-desc' | 'rating' | 'newest'
+  min_price?: number
+  max_price?: number
 }

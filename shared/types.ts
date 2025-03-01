@@ -142,4 +142,6 @@ export interface ProductFilters {
   inStock?: boolean
   onSale?: boolean
   sortBy?: 'price-asc' | 'price-desc' | 'rating' | 'newest'
+  minPrice?: number
+  maxPrice?: number
 }
