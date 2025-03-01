@@ -13,7 +13,6 @@ import { Title } from './title'
 const links = [
   { href: '/catalog', text: 'Каталог' },
   { href: '/profile', text: 'Профиль', loggedIn: true, notRoot: true },
-  { href: '/lk', text: 'Личный кабинет', loggedIn: true },
   { href: '/login', text: 'Профиль', loggedIn: false }
 ]
 
@@ -34,7 +33,7 @@ export const Links: React.FC<Props> = ({ className }) => {
 
   const isAdminAccessed = user.role === UserRole.AGENT || user.role === UserRole.ROOT
   const adminLink = user.role === UserRole.ROOT ? '/root' : '/agent'
-  
+
   const isSellerAccessed = user.role === UserRole.SELLER
 
   return (
@@ -73,7 +72,7 @@ export const Links: React.FC<Props> = ({ className }) => {
           </Title>
         </Link>
       )}
-      
+
       {isSellerAccessed && (
         <Link href="/seller-dashboard">
           <Title
