@@ -14,13 +14,21 @@ import { cn } from '@/lib/utils'
 import { z } from '@/lib/zod'
 import { LoginRequest } from '@/shared/api/user/types'
 import { zodResolver } from '@hookform/resolvers/zod'
+import React from 'react'
 import { useForm } from 'react-hook-form'
+import { Checkbox } from '../ui/checkbox'
 import { Title } from './title'
 
-const formSchema = z.object({
-  username: z.string().email(),
-  password: z.string().min(4)
-})
+const formSchema = z
+  .object({
+    username: z.string().email(),
+    password: z.string().min(4),
+    confirm: z.boolean()
+  })
+  .refine((data) => data.confirm, {
+    message: 'Согласитесь с правилами площадки',
+    path: ['confirm']
+  })
 
 interface Props {
   onSubmit: (request: LoginRequest) => void
@@ -63,6 +71,23 @@ export const LoginForm: React.FC<Props> = ({ onSubmit, className, onResetPasswor
                 <Input placeholder="" {...field} type="password" />
               </FormControl>
               <FormMessage />
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={form.control}
+          name="confirm"
+          render={({ field }) => (
+            <FormItem>
+              <div className="flex items-center space-x-2">
+                <Checkbox id="terms" onChange={(e: any) => (field.value = e.target.checked)} />
+                <label
+                  htmlFor="terms"
+                  className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                >
+                  Соглашаюсь с правилами пользования торговой площадкой и возврата
+                </label>
+              </div>
             </FormItem>
           )}
         />
