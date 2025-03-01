@@ -34,7 +34,7 @@ export const Links: React.FC<Props> = ({ className }) => {
   const isAdminAccessed = user.role === UserRole.ROOT
   const adminLink = user.role === UserRole.ROOT ? '/admin' : '/agent'
 
-  const isSellerAccessed = user.role === UserRole.SELLER
+  const isSellerAccessed = user.role === UserRole.SELLER || user.role === UserRole.SELF_EMPLOYED
 
   return (
     <Container

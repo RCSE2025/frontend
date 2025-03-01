@@ -1,8 +1,9 @@
 export enum UserRole {
-  USER = 'USER',
-  SUPPORT = 'SUPPORT',
-  ROOT = 'ROOT',
-  SELLER = 'SELLER'
+  USER = 'user',
+  SUPPORT = 'support',
+  ROOT = 'admin',
+  SELLER = 'business',
+  SELF_EMPLOYED = 'self-employed'
 }
 
 export interface User {
