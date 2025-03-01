@@ -6,6 +6,14 @@ export enum UserRole {
   SELF_EMPLOYED = 'self-employed'
 }
 
+export const userRoleMap: Record<UserRole, string> = {
+  [UserRole.USER]: 'Покупатель',
+  [UserRole.SUPPORT]: 'Поддержка',
+  [UserRole.ROOT]: 'Администратор',
+  [UserRole.SELLER]: 'Юрлицо',
+  [UserRole.SELF_EMPLOYED]: 'Самозанятый'
+}
+
 export interface User {
   id: number
   name: string
@@ -32,11 +40,12 @@ export interface SignupRequest {
 }
 
 export interface UpdateUserRequest {
-  name: string
-  surname: string
-  patronymic: string
-  email: string
-  date_of_birth: Date
+  name?: string
+  surname?: string
+  patronymic?: string
+  email?: string
+  date_of_birth?: Date
+  role?: UserRole
 }
 
 export interface ResetPassword {
