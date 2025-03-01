@@ -9,7 +9,7 @@ const useMockAPI = true
 
 export const API = useMockAPI
   ? {
-      User: MockAPI.User,
+      User: userApi,
       Ticket: MockAPI.Ticket,
       Order: orderApi,
       Product: productApi
