@@ -10,7 +10,7 @@ import { Separator } from '@/components/ui/separator'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { cn } from '@/lib/utils'
 import { IProduct } from '@/shared/api/product'
-import { productCategoryMap } from '@/shared/types'
+import { ProductCategory, productCategoryMap } from '@/shared/types'
 
 interface ProductDetailProps {
   product: IProduct
@@ -64,7 +64,7 @@ export function ProductDetail({ product, relatedProducts = [], className }: Prod
           href={`/category/${product.category.toLowerCase()}`}
           className="hover:text-foreground"
         >
-          {productCategoryMap[product.category]}
+          {productCategoryMap[product.category as ProductCategory]}
         </Link>
         <span className="mx-2">/</span>
         <span className="text-foreground">{product.title}</span>
@@ -75,7 +75,12 @@ export function ProductDetail({ product, relatedProducts = [], className }: Prod
         {/* Галерея изображений */}
         <div className="space-y-4">
           <div className="relative aspect-square overflow-hidden rounded-lg border">
-            <Image src={selectedImage.url} alt={selectedImage.id} fill className="object-cover" />
+            <Image
+              src={selectedImage.url}
+              alt={selectedImage.id.toString()}
+              fill
+              className="object-cover"
+            />
             {product.images.length > 1 && (
               <>
                 <Button
@@ -144,7 +149,7 @@ export function ProductDetail({ product, relatedProducts = [], className }: Prod
                     />
                   ))}
                 <span className="ml-2 text-sm text-muted-foreground">
-                  {product.rating} ({product.reviewCount} отзывов)
+                  {product.rating} ({product.review_count} отзывов)
                 </span>
               </div>
             </div>
@@ -159,7 +164,7 @@ export function ProductDetail({ product, relatedProducts = [], className }: Prod
                 </span>
               )}
             </div>
-            {product.inStock ? (
+            {product.quantity > 0 ? (
               <p className="text-sm text-green-600">В наличии</p>
             ) : (
               <p className="text-sm text-destructive">Нет в наличии</p>
@@ -209,14 +214,14 @@ export function ProductDetail({ product, relatedProducts = [], className }: Prod
                   <span className="sr-only">Увеличить количество</span>
                 </Button>
               </div>
-              <Button className="flex-1" disabled={!product.inStock}>
+              <Button className="flex-1" disabled={product.quantity === 0}>
                 <ShoppingCart className="mr-2 h-4 w-4" />В корзину
               </Button>
             </div>
 
             <div className="space-y-1 text-sm">
               <p className="text-green-600">Бесплатная доставка</p>
-              <p>Ожидаемая доставка: {product.estimatedDelivery}</p>
+              <p>Ожидаемая доставка: {product.estimated_delivery}</p>
             </div>
           </div>
         </div>
@@ -258,7 +263,7 @@ export function ProductDetail({ product, relatedProducts = [], className }: Prod
                   <CardContent className="p-4">
                     <div className="mb-2 flex items-center justify-between">
                       <div>
-                        <p className="font-medium">{review.userName}</p>
+                        <p className="font-medium">{review.user_name}</p>
                         <p className="text-xs text-muted-foreground">
                           {new Date(review.date).toLocaleDateString()}
                         </p>

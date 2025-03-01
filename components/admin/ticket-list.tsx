@@ -1,7 +1,16 @@
 'use client'
 
+import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
+import {
+  Pagination,
+  PaginationContent,
+  PaginationItem,
+  PaginationLink,
+  PaginationNext,
+  PaginationPrevious
+} from '@/components/ui/pagination'
 import {
   Select,
   SelectContent,
@@ -17,27 +26,17 @@ import {
   TableHeader,
   TableRow
 } from '@/components/ui/table'
+import { useTickets } from '@/shared/store/useTickets'
 import {
-  Ticket,
   TicketFilters,
   TicketPriority,
   TicketStatus,
   ticketPriorityMap,
   ticketStatusMap
 } from '@/shared/types'
-import { Badge } from '@/components/ui/badge'
-import { useTickets } from '@/shared/store/useTickets'
-import { useEffect, useState } from 'react'
-import {
-  Pagination,
-  PaginationContent,
-  PaginationItem,
-  PaginationLink,
-  PaginationNext,
-  PaginationPrevious
-} from '@/components/ui/pagination'
 import { format } from 'date-fns'
 import { ru } from 'date-fns/locale'
+import { useEffect, useState } from 'react'
 
 export const TicketList = () => {
   const {
@@ -148,24 +147,6 @@ export const TicketList = () => {
             ))}
           </SelectContent>
         </Select>
-
-        <Select
-          value={priorityFilter}
-          onValueChange={(value: string) => setPriorityFilter(value as TicketPriority | 'all')}
-        >
-          <SelectTrigger className="md:w-1/6">
-            <SelectValue placeholder="Приоритет" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="all">Все приоритеты</SelectItem>
-            {Object.entries(ticketPriorityMap).map(([key, value]) => (
-              <SelectItem key={key} value={key}>
-                {value}
-              </SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
-
         <Select
           value={sortBy || 'createdAt-desc'}
           onValueChange={(value) => setSortBy(value as TicketFilters['sortBy'])}
@@ -176,8 +157,6 @@ export const TicketList = () => {
           <SelectContent>
             <SelectItem value="createdAt-desc">Сначала новые</SelectItem>
             <SelectItem value="createdAt-asc">Сначала старые</SelectItem>
-            <SelectItem value="priority-desc">По приоритету (выс-низ)</SelectItem>
-            <SelectItem value="priority-asc">По приоритету (низ-выс)</SelectItem>
           </SelectContent>
         </Select>
 
@@ -196,10 +175,8 @@ export const TicketList = () => {
               <TableHead>ID</TableHead>
               <TableHead>Заголовок</TableHead>
               <TableHead>Статус</TableHead>
-              <TableHead>Приоритет</TableHead>
               <TableHead>Создан</TableHead>
               <TableHead>Пользователь</TableHead>
-              <TableHead>Назначен</TableHead>
               <TableHead>Действия</TableHead>
             </TableRow>
           </TableHeader>
@@ -221,11 +198,7 @@ export const TicketList = () => {
                 <TableRow key={ticket.id}>
                   <TableCell className="font-medium">{ticket.id.slice(0, 8)}</TableCell>
                   <TableCell>{ticket.title}</TableCell>
-                  <TableCell>
-                    <Badge className={getStatusBadgeColor(ticket.status)}>
-                      {ticketStatusMap[ticket.status]}
-                    </Badge>
-                  </TableCell>
+
                   <TableCell>
                     <Badge className={getPriorityBadgeColor(ticket.priority)}>
                       {ticketPriorityMap[ticket.priority]}
@@ -235,7 +208,6 @@ export const TicketList = () => {
                     {format(new Date(ticket.createdAt), 'dd MMM yyyy HH:mm', { locale: ru })}
                   </TableCell>
                   <TableCell>{ticket.userName}</TableCell>
-                  <TableCell>{ticket.assignedToName || '—'}</TableCell>
                   <TableCell>
                     <Button variant="outline" size="sm" asChild>
                       <a href={`/admin/tickets/${ticket.id}`}>Просмотр</a>

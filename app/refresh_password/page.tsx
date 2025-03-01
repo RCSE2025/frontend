@@ -12,9 +12,9 @@ export default function ResetPassword() {
   const router = useRouter()
   const searchParams = useSearchParams()
 
-  const onSubmit = async ({ new_password }: { new_password: string }) => {
+  const onSubmit = async ({ password }: { password: string }) => {
     resetPassword({
-      new_password,
+      password,
       token: searchParams.get('token')!
     })
       .then(() => {

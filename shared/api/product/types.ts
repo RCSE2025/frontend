@@ -56,7 +56,7 @@ export interface IProduct extends IModelBase {
   sku: string
   estimated_delivery: string
   images: IProductMedia[]
-  specifications: IProductSpecifications
+  specifications: IProductSpecifications[]
   reviews?: IReview[]
   related_products?: number[]
 }
@@ -67,13 +67,15 @@ export interface PriceRange {
 }
 
 export interface IProductFilterOptions {
-  search_query?: string
-  categories?: ProductCategory[]
+  q?: string
+  categories?: string
   brands?: string[]
   rating?: number
   in_stock?: boolean
   on_sale?: boolean
   sort_by?: 'price-asc' | 'price-desc' | 'rating' | 'newest'
+  min_price?: number
+  max_price?: number
 }
 
 export interface ICategory {

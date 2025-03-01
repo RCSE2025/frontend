@@ -1,15 +1,8 @@
 'use client'
 
+import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle
-} from '@/components/ui/card'
-import { Textarea } from '@/components/ui/textarea'
+import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card'
 import {
   Select,
   SelectContent,
@@ -17,21 +10,15 @@ import {
   SelectTrigger,
   SelectValue
 } from '@/components/ui/select'
-import { Badge } from '@/components/ui/badge'
-import {
-  Ticket,
-  TicketPriority,
-  TicketStatus,
-  ticketPriorityMap,
-  ticketStatusMap
-} from '@/shared/types'
+import { Separator } from '@/components/ui/separator'
+import { Textarea } from '@/components/ui/textarea'
+import { UserRole } from '@/shared/api/user/types'
 import { useTickets } from '@/shared/store/useTickets'
-import { useEffect, useState } from 'react'
+import { useUser } from '@/shared/store/useUser'
+import { TicketPriority, TicketStatus, ticketStatusMap } from '@/shared/types'
 import { format } from 'date-fns'
 import { ru } from 'date-fns/locale'
-import { Separator } from '@/components/ui/separator'
-import { useUser } from '@/shared/store/useUser'
-import { UserRole } from '@/shared/api/user/types'
+import { useEffect, useState } from 'react'
 
 interface TicketDetailProps {
   ticketId: string
@@ -43,8 +30,6 @@ export const TicketDetail = ({ ticketId }: TicketDetailProps) => {
   const { user } = useUser()
   const [comment, setComment] = useState('')
   const [status, setStatus] = useState<TicketStatus | null>(null)
-  const [priority, setPriority] = useState<TicketPriority | null>(null)
-  const [assignedToId, setAssignedToId] = useState<string | null>(null)
 
   useEffect(() => {
     fetchTicketById(ticketId)
@@ -54,8 +39,6 @@ export const TicketDetail = ({ ticketId }: TicketDetailProps) => {
   useEffect(() => {
     if (currentTicket) {
       setStatus(currentTicket.status)
-      setPriority(currentTicket.priority)
-      setAssignedToId(currentTicket.assignedToId || null)
     }
   }, [currentTicket])
 
@@ -73,7 +56,6 @@ export const TicketDetail = ({ ticketId }: TicketDetailProps) => {
 
   const handlePriorityChange = async (value: string) => {
     const newPriority = value as TicketPriority
-    setPriority(newPriority)
 
     if (currentTicket) {
       await updateTicket({
@@ -85,7 +67,6 @@ export const TicketDetail = ({ ticketId }: TicketDetailProps) => {
 
   const handleAssignedToChange = async (value: string) => {
     const newAssignedToId = value === 'none' ? null : value
-    setAssignedToId(newAssignedToId)
 
     if (currentTicket) {
       await updateTicket({
@@ -186,31 +167,6 @@ export const TicketDetail = ({ ticketId }: TicketDetailProps) => {
             </div>
 
             <div>
-              <p className="text-sm font-medium">Приоритет</p>
-              {isAdmin ? (
-                <Select
-                  value={priority || 'MEDIUM'}
-                  onValueChange={(value: string) => handlePriorityChange(value)}
-                >
-                  <SelectTrigger>
-                    <SelectValue placeholder="Выберите приоритет" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {Object.entries(ticketPriorityMap).map(([key, value]) => (
-                      <SelectItem key={key} value={key}>
-                        {value}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              ) : (
-                <Badge className={getPriorityBadgeColor(currentTicket.priority)}>
-                  {ticketPriorityMap[currentTicket.priority]}
-                </Badge>
-              )}
-            </div>
-
-            <div>
               <p className="text-sm font-medium">Создан</p>
               <p>
                 {format(new Date(currentTicket.createdAt), 'dd MMMM yyyy HH:mm', { locale: ru })}
@@ -239,40 +195,6 @@ export const TicketDetail = ({ ticketId }: TicketDetailProps) => {
               <p className="text-sm font-medium">ID пользователя</p>
               <p>{currentTicket.userId}</p>
             </div>
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardHeader>
-            <CardTitle>Назначение</CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-4">
-            {isAdmin ? (
-              <div>
-                <p className="text-sm font-medium">Назначить администратора</p>
-                <Select
-                  value={assignedToId || 'none'}
-                  onValueChange={(value: string) => handleAssignedToChange(value)}
-                >
-                  <SelectTrigger>
-                    <SelectValue placeholder="Выберите администратора" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="none">Не назначен</SelectItem>
-                    {admins.map((admin) => (
-                      <SelectItem key={admin.id} value={admin.id}>
-                        {admin.name}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              </div>
-            ) : (
-              <div>
-                <p className="text-sm font-medium">Назначенный администратор</p>
-                <p>{currentTicket.assignedToName || 'Не назначен'}</p>
-              </div>
-            )}
           </CardContent>
         </Card>
       </div>

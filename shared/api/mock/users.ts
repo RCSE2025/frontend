@@ -1,10 +1,10 @@
 import {
-  User,
-  UserRole,
   LoginRequest,
+  ResetPassword,
   SignupRequest,
   UpdateUserRequest,
-  ResetPassword
+  User,
+  UserRole
 } from '../user/types'
 
 // Mock user data
@@ -291,7 +291,7 @@ export const mockResetPassword = async (request: ResetPassword): Promise<void> =
   return new Promise((resolve, reject) => {
     setTimeout(() => {
       // For mock purposes, accept any token that's not empty
-      if (request.token && request.new_password) {
+      if (request.token && request.password) {
         resolve()
       } else {
         reject(new Error('Invalid token or password'))
