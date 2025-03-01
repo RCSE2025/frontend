@@ -56,7 +56,7 @@ export interface IProduct extends IModelBase {
   sku: string
   estimated_delivery: string
   images: IProductMedia[]
-  specifications: IProductSpecifications
+  specifications: IProductSpecifications[]
   reviews?: IReview[]
   related_products?: number[]
 }
