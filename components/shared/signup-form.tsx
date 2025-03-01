@@ -21,19 +21,13 @@ import { Calendar } from '../ui/calendar'
 import { Popover, PopoverContent, PopoverTrigger } from '../ui/popover'
 import { Title } from './title'
 
-const roles = {
-  SPORTSMAN: 'Спортсмен',
-  AGENT: 'Представитель'
-}
-
 const formSchema = z
   .object({
-    email: z.string().email(),
-    name: z.string(),
     surname: z.string(),
+    name: z.string(),
     patronymic: z.string(),
     date_of_birth: z.date(),
-    role: z.enum(Object.keys(roles) as [keyof typeof roles]),
+    email: z.string().email(),
     password: z.string().min(4),
     confirm: z.string().min(4)
   })
@@ -51,8 +45,7 @@ export const SignUpForm: React.FC<Props> = ({ onSubmit, className }) => {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      date_of_birth: new Date(),
-      role: 'SPORTSMAN'
+      date_of_birth: new Date()
     }
   })
 
@@ -65,7 +58,7 @@ export const SignUpForm: React.FC<Props> = ({ onSubmit, className }) => {
           render={({ field }) => (
             <FormItem>
               <FormLabel>
-                <Title>Фамилия</Title>
+                <Title size="xs">Фамилия</Title>
               </FormLabel>
               <FormControl>
                 <Input {...field} type="text" />
@@ -80,7 +73,7 @@ export const SignUpForm: React.FC<Props> = ({ onSubmit, className }) => {
           render={({ field }) => (
             <FormItem>
               <FormLabel>
-                <Title>Имя</Title>
+                <Title size="xs">Имя</Title>
               </FormLabel>
               <FormControl>
                 <Input {...field} type="text" />
@@ -95,7 +88,7 @@ export const SignUpForm: React.FC<Props> = ({ onSubmit, className }) => {
           render={({ field }) => (
             <FormItem>
               <FormLabel>
-                <Title>Отчество</Title>
+                <Title size="xs">Отчество</Title>
               </FormLabel>
               <FormControl>
                 <Input {...field} type="text" />
@@ -110,7 +103,7 @@ export const SignUpForm: React.FC<Props> = ({ onSubmit, className }) => {
           render={({ field }) => (
             <FormItem>
               <FormLabel>
-                <Title>Дата рождения</Title>
+                <Title size="xs">Дата рождения</Title>
               </FormLabel>
               <FormControl>
                 <Popover>
@@ -141,7 +134,7 @@ export const SignUpForm: React.FC<Props> = ({ onSubmit, className }) => {
           render={({ field }) => (
             <FormItem>
               <FormLabel>
-                <Title>Электронная почта</Title>
+                <Title size="xs">Электронная почта</Title>
               </FormLabel>
               <FormControl>
                 <Input {...field} type="email" />
@@ -156,7 +149,7 @@ export const SignUpForm: React.FC<Props> = ({ onSubmit, className }) => {
           render={({ field }) => (
             <FormItem>
               <FormLabel>
-                <Title>Пароль</Title>
+                <Title size="xs">Пароль</Title>
               </FormLabel>
               <FormControl>
                 <Input placeholder="" {...field} type="password" />
@@ -171,7 +164,7 @@ export const SignUpForm: React.FC<Props> = ({ onSubmit, className }) => {
           render={({ field }) => (
             <FormItem>
               <FormLabel>
-                <Title>Повторите пароль</Title>
+                <Title size="xs">Повторите пароль</Title>
               </FormLabel>
               <FormControl>
                 <Input placeholder="" {...field} type="password" />

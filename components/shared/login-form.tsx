@@ -1,8 +1,5 @@
 'use client'
 
-import { zodResolver } from '@hookform/resolvers/zod'
-import { useForm } from 'react-hook-form'
-import { z } from '@/lib/zod'
 import { Button } from '@/components/ui/button'
 import {
   Form,
@@ -13,8 +10,11 @@ import {
   FormMessage
 } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
-import { LoginRequest } from '@/shared/api/user/types'
 import { cn } from '@/lib/utils'
+import { z } from '@/lib/zod'
+import { LoginRequest } from '@/shared/api/user/types'
+import { zodResolver } from '@hookform/resolvers/zod'
+import { useForm } from 'react-hook-form'
 import { Title } from './title'
 
 const formSchema = z.object({
@@ -42,7 +42,7 @@ export const LoginForm: React.FC<Props> = ({ onSubmit, className, onResetPasswor
           render={({ field }) => (
             <FormItem>
               <FormLabel>
-                <Title>Электронная почта</Title>
+                <Title size="xs">Электронная почта</Title>
               </FormLabel>
               <FormControl>
                 <Input {...field} type="email" />
@@ -57,7 +57,7 @@ export const LoginForm: React.FC<Props> = ({ onSubmit, className, onResetPasswor
           render={({ field }) => (
             <FormItem>
               <FormLabel>
-                <Title>Пароль</Title>
+                <Title size="xs">Пароль</Title>
               </FormLabel>
               <FormControl>
                 <Input placeholder="" {...field} type="password" />

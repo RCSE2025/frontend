@@ -24,10 +24,10 @@ export default function OTP() {
   return (
     <div className="my-20">
       <div className="flex flex-col">
-        <Title className="self-center font-bold" size="xl">
+        <Title className="self-center font-bold" size="xs">
           Подтверждение
         </Title>
-        <Title className="self-center" size="lg">
+        <Title className="self-center" size="xs">
           E-mail
         </Title>
       </div>
