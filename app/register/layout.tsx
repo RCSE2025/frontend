@@ -1,24 +1,21 @@
 'use client'
 
+import { Container } from '@/components/shared/container'
 import { Title } from '@/components/shared/title'
-import { usePathname } from 'next/navigation'
 
-export default function LoginLayout({
+export default function RegisterLayout({
   children
 }: Readonly<{
   children: React.ReactNode
 }>) {
   return (
-    <div className=" my-20">
-      <div className="flex flex-col">
-        <Title className="self-center font-bold" size="xl">
-          Регистрация представителя
-        </Title>
-        <Title className="self-center" size="lg">
-          личный кабинет
+    <Container className="w-[90%] self-center bg-background p-5 border-[1px] border-border rounded-lg">
+      <div className="flex flex-col p-5">
+        <Title className="font-bold" size="lg">
+          Регистрация продавца. Заполнение анкеты
         </Title>
       </div>
       {children}
-    </div>
+    </Container>
   )
 }

@@ -1,8 +1,6 @@
 'use client'
 
-import { zodResolver } from '@hookform/resolvers/zod'
-import { useForm } from 'react-hook-form'
-import { z } from '@/lib/zod'
+import { Title } from '@/components/shared/title'
 import { Button } from '@/components/ui/button'
 import {
   Form,
@@ -13,12 +11,19 @@ import {
   FormMessage
 } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
-import { RegionalAgentCreateRequest } from '@/shared/api/agents/types'
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectTrigger,
+  SelectValue
+} from '@/components/ui/select'
 import { cn } from '@/lib/utils'
-import { Title } from '@/components/shared/title'
+import { z } from '@/lib/zod'
+import { zodResolver } from '@hookform/resolvers/zod'
 import React from 'react'
-import { ComboBox } from '@/components/ui/combo-box'
-import { regionsMappedNames } from '@/shared/utils/regions'
+import { useForm } from 'react-hook-form'
 
 const formSchema = z.object({
   email: z.string().email(),
@@ -32,11 +37,11 @@ const formSchema = z.object({
 })
 
 interface Props {
-  onSubmit: (request: RegionalAgentCreateRequest) => void
+  onSubmit: () => void
   className?: string
 }
 
-export const RegisterAgentForm: React.FC<Props> = ({ onSubmit, className }) => {
+export const RegisterBusinessForm: React.FC<Props> = ({ onSubmit, className }) => {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema)
   })
@@ -49,7 +54,33 @@ export const RegisterAgentForm: React.FC<Props> = ({ onSubmit, className }) => {
           render={({ field }) => (
             <FormItem>
               <FormLabel>
-                <Title>Название</Title>
+                <Title className="text-slate-400" size="xs">
+                  Страна регистрации
+                </Title>
+              </FormLabel>
+              <FormControl>
+                <Select disabled>
+                  <SelectTrigger>
+                    <SelectValue placeholder="Российская Федерация" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectGroup>
+                      <SelectItem value="РФ">Российская Федерация</SelectItem>
+                    </SelectGroup>
+                  </SelectContent>
+                </Select>
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={form.control}
+          name="title"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>
+                <Title size="xs">ИНН</Title>
               </FormLabel>
               <FormControl>
                 <Input {...field} type="text" />
@@ -64,10 +95,19 @@ export const RegisterAgentForm: React.FC<Props> = ({ onSubmit, className }) => {
           render={({ field }) => (
             <FormItem>
               <FormLabel>
-                <Title>Описание</Title>
+                <Title size="xs">Форма организации</Title>
               </FormLabel>
               <FormControl>
-                <Input {...field} type="text" />
+                <Select>
+                  <SelectTrigger>
+                    <SelectValue placeholder="Российская Федерация" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectGroup>
+                      <SelectItem value="РФ">Российская Федерация</SelectItem>
+                    </SelectGroup>
+                  </SelectContent>
+                </Select>
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -75,34 +115,11 @@ export const RegisterAgentForm: React.FC<Props> = ({ onSubmit, className }) => {
         />
         <FormField
           control={form.control}
-          name="federal_subject"
+          name="kpp"
           render={({ field }) => (
             <FormItem>
               <FormLabel>
-                <Title>Субъект РФ</Title>
-              </FormLabel>
-              <FormControl>
-                <ComboBox
-                  options={regionsMappedNames}
-                  defaultValue={field.value}
-                  onValueChange={(value) => {
-                    field.onChange(value.value)
-                  }}
-                  className="w-full"
-                  buttonClassName="w-full"
-                />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <FormField
-          control={form.control}
-          name="address"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>
-                <Title>Адрес</Title>
+                <Title size="xs">КПП</Title>
               </FormLabel>
               <FormControl>
                 <Input {...field} />
@@ -113,14 +130,30 @@ export const RegisterAgentForm: React.FC<Props> = ({ onSubmit, className }) => {
         />
         <FormField
           control={form.control}
-          name="email"
+          name="ogrn"
           render={({ field }) => (
             <FormItem>
               <FormLabel>
-                <Title>Электронная почта</Title>
+                <Title size="xs">ОГРН</Title>
               </FormLabel>
               <FormControl>
-                <Input {...field} type="email" />
+                <Input {...field} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
+        <FormField
+          control={form.control}
+          name="short_name"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>
+                <Title size="xs">Краткое наименование продавца</Title>
+              </FormLabel>
+              <FormControl>
+                <Input {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -128,14 +161,14 @@ export const RegisterAgentForm: React.FC<Props> = ({ onSubmit, className }) => {
         />
         <FormField
           control={form.control}
-          name="phone_number"
+          name="short_name"
           render={({ field }) => (
             <FormItem>
               <FormLabel>
-                <Title>Телефон</Title>
+                <Title size="xs">Полное наименование продавца</Title>
               </FormLabel>
               <FormControl>
-                <Input {...field} type="text" />
+                <Input {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -143,29 +176,14 @@ export const RegisterAgentForm: React.FC<Props> = ({ onSubmit, className }) => {
         />
         <FormField
           control={form.control}
-          name="telegram"
+          name="fio"
           render={({ field }) => (
             <FormItem>
               <FormLabel>
-                <Title>Telegram</Title>
+                <Title size="xs">ФИО руководителя</Title>
               </FormLabel>
               <FormControl>
-                <Input {...field} type="text" />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <FormField
-          control={form.control}
-          name="vk"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>
-                <Title>VK</Title>
-              </FormLabel>
-              <FormControl>
-                <Input {...field} type="text" />
+                <Input {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>
