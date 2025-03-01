@@ -5,6 +5,8 @@ import * as React from 'react'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardFooter } from '@/components/ui/card'
 import { cn } from '@/lib/utils'
+import { useCart } from '@/shared/store/useCart'
+import { Minus, Plus } from 'lucide-react'
 
 interface ProductCardProps extends React.HTMLAttributes<HTMLDivElement> {
   product: {
@@ -15,13 +17,14 @@ interface ProductCardProps extends React.HTMLAttributes<HTMLDivElement> {
     image: string
     discount?: number
     category?: string
+    quantity?: number
   }
   aspectRatio?: 'portrait' | 'square'
   width?: number
   height?: number
 }
 
-export function ProductCard({
+export function CartProduct({
   product,
   aspectRatio = 'portrait',
   width = 250,
@@ -30,6 +33,8 @@ export function ProductCard({
   ...props
 }: ProductCardProps) {
   const { id, title, price, rating, image, discount } = product
+
+  const { products, updateProductQuantity } = useCart()
 
   return (
     <Card className={cn('overflow-hidden', className)} {...props}>
@@ -90,8 +95,21 @@ export function ProductCard({
           )}
         </div>
       </CardContent>
-      <CardFooter className="p-4 pt-0">
-        <Button className="w-full">В корзину</Button>
+      <CardFooter className="p-4 pt-0 flex items-center justify-between">
+        <Minus
+          className="cursor-pointer"
+          onClick={() => {
+            if (products[id] === 0) return
+            updateProductQuantity(id, products[id] - 1)
+          }}
+        />{' '}
+        <div className="select-none">
+          {products[id]} {'шт. '}
+        </div>
+        <Plus
+          className="cursor-pointer"
+          onClick={() => updateProductQuantity(id, products[id] + 1)}
+        />
       </CardFooter>
     </Card>
   )
