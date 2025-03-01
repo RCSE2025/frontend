@@ -1,7 +1,8 @@
 export enum UserRole {
   SPORTSMAN = 'SPORTSMAN',
   AGENT = 'AGENT',
-  ROOT = 'ROOT'
+  ROOT = 'ROOT',
+  SELLER = 'SELLER'
 }
 
 export interface User {
