@@ -26,14 +26,13 @@ import React from 'react'
 import { useForm } from 'react-hook-form'
 
 const formSchema = z.object({
-  email: z.string().email(),
-  title: z.string(),
-  description: z.string(),
-  address: z.string(),
-  telegram: z.string(),
-  vk: z.string(),
-  federal_subject: z.string(),
-  phone_number: z.string().regex(/^\+?[0-9]{7,15}$/, 'Неправильный номер телефона')
+  country: z.string(),
+  INN: z.number(),
+  KPP: z.number(),
+  OGRN: z.number(),
+  short_name: z.string(),
+  full_name: z.string(),
+  owner: z.string()
 })
 
 interface Props {
@@ -45,12 +44,13 @@ export const RegisterBusinessForm: React.FC<Props> = ({ onSubmit, className }) =
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema)
   })
+
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className={cn('space-y-8', className)}>
         <FormField
           control={form.control}
-          name="title"
+          name="country"
           render={({ field }) => (
             <FormItem>
               <FormLabel>
@@ -76,7 +76,7 @@ export const RegisterBusinessForm: React.FC<Props> = ({ onSubmit, className }) =
         />
         <FormField
           control={form.control}
-          name="title"
+          name="INN"
           render={({ field }) => (
             <FormItem>
               <FormLabel>
@@ -91,31 +91,7 @@ export const RegisterBusinessForm: React.FC<Props> = ({ onSubmit, className }) =
         />
         <FormField
           control={form.control}
-          name="description"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>
-                <Title size="xs">Форма организации</Title>
-              </FormLabel>
-              <FormControl>
-                <Select>
-                  <SelectTrigger>
-                    <SelectValue placeholder="Российская Федерация" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectGroup>
-                      <SelectItem value="РФ">Российская Федерация</SelectItem>
-                    </SelectGroup>
-                  </SelectContent>
-                </Select>
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <FormField
-          control={form.control}
-          name="kpp"
+          name="KPP"
           render={({ field }) => (
             <FormItem>
               <FormLabel>
@@ -130,7 +106,7 @@ export const RegisterBusinessForm: React.FC<Props> = ({ onSubmit, className }) =
         />
         <FormField
           control={form.control}
-          name="ogrn"
+          name="OGRN"
           render={({ field }) => (
             <FormItem>
               <FormLabel>
@@ -161,7 +137,7 @@ export const RegisterBusinessForm: React.FC<Props> = ({ onSubmit, className }) =
         />
         <FormField
           control={form.control}
-          name="short_name"
+          name="full_name"
           render={({ field }) => (
             <FormItem>
               <FormLabel>
@@ -176,7 +152,7 @@ export const RegisterBusinessForm: React.FC<Props> = ({ onSubmit, className }) =
         />
         <FormField
           control={form.control}
-          name="fio"
+          name="owner"
           render={({ field }) => (
             <FormItem>
               <FormLabel>
