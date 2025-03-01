@@ -12,8 +12,8 @@ import { Title } from './title'
 
 const links = [
   { href: '/catalog', text: 'Каталог' },
-  { href: '/profile', text: 'Профиль', loggedIn: true, notRoot: true },
-  { href: '/login', text: 'Профиль', loggedIn: false }
+  { href: '/profile', text: 'Профиль', loggedIn: true },
+  { href: '/login', text: 'Вход', loggedIn: false }
 ]
 
 interface Props {
@@ -25,13 +25,13 @@ export const Links: React.FC<Props> = ({ className }) => {
 
   const { loggedIn, fetchUser, updateLoggedIn, user } = useUser()
 
-  // React.useEffect(() => {
-  //   fetchUser()
-  //     .then(() => updateLoggedIn(true))
-  //     .catch(() => updateLoggedIn(false))
-  // }, [fetchUser, updateLoggedIn])
+  React.useEffect(() => {
+    fetchUser()
+      .then(() => updateLoggedIn(true))
+      .catch(() => updateLoggedIn(false))
+  }, [fetchUser, updateLoggedIn])
 
-  const isAdminAccessed = user.role === UserRole.AGENT || user.role === UserRole.ROOT
+  const isAdminAccessed = user.role === UserRole.ROOT
   const adminLink = user.role === UserRole.ROOT ? '/admin' : '/agent'
 
   const isSellerAccessed = user.role === UserRole.SELLER
@@ -44,8 +44,7 @@ export const Links: React.FC<Props> = ({ className }) => {
       )}
     >
       {links
-        // .filter((link) => link.loggedIn === undefined || link.loggedIn === loggedIn)
-        // .filter((link) => !link.notRoot || (link.notRoot && user.role !== UserRole.ROOT))
+        .filter((link) => link.loggedIn === undefined || link.loggedIn === loggedIn)
         .map(({ href, text }) => (
           <Link key={href} href={href}>
             <Title

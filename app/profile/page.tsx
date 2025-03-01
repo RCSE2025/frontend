@@ -1,10 +1,8 @@
 'use client'
 
 import { Container } from '@/components/shared/container'
-import { HeatMap } from '@/components/shared/heatmap'
 import { Title } from '@/components/shared/title'
 import { Separator } from '@/components/ui/separator'
-import { useStatistics } from '@/shared/store/useStatistics'
 import { ChartNoAxesCombined, CircleHelp } from 'lucide-react'
 import { useRouter } from 'next/navigation'
 import React from 'react'
@@ -14,31 +12,32 @@ import { columns } from './UsersTables/columns'
 import EquationIcon from './components/EquationIcon'
 
 export default function LK() {
-  const {
-    selfEventStatistics: statistics,
-    selfSummary: summary,
-    getSelfEventsStatistics,
-    getSelfSummary
-  } = useStatistics()
+  // const {
+  //   selfEventStatistics: statistics,
+  //   selfSummary: summary,
+  //   getSelfEventsStatistics,
+  //   getSelfSummary
+  // } = useStatistics()
 
-  const router = useRouter()
+  // const router = useRouter()
 
-  const getData = React.useCallback(async () => {
-    Promise.all([getSelfEventsStatistics(), getSelfSummary()]).catch((err) => {
-      toast.error('Не удалось получить информацию о пользователе')
-      router.push('/')
-    })
-  }, [])
+  // const getData = React.useCallback(async () => {
+  //   Promise.all([getSelfEventsStatistics(), getSelfSummary()]).catch((err) => {
+  //     toast.error('Не удалось получить информацию о пользователе')
+  //     router.push('/')
+  //   })
+  // }, [])
 
-  React.useEffect(() => {
-    getData().catch((err) => {})
-  }, [])
+  // React.useEffect(() => {
+  //   getData().catch((err) => {})
+  // }, [])
 
-  return (
-    statistics &&
-    summary && (
-      <Container className="p-5">
-        <div className="w-full flex flex-col items-center justify-center mb-5">
+  // return (
+  //   statistics &&
+  //   summary && (
+  // <Container className="p-5">
+  {
+    /* <div className="w-full flex flex-col items-center justify-center mb-5">
           <Title size="xs">Участие в соревнованиях</Title>
           <HeatMap
             className="p-5 w-[55%]"
@@ -76,8 +75,11 @@ export default function LK() {
         <Title className="mt-5" size="xs">
           Результаты
         </Title>
-        <UsersTable columns={columns} data={statistics} />
-      </Container>
-    )
-  )
+        <UsersTable columns={columns} data={statistics} /> */
+  }
+  //     </Container>
+  //   )
+  // )
+
+  return <></>
 }

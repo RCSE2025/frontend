@@ -16,7 +16,7 @@ const mockUsers: User[] = [
     email: 'ivan@example.com',
     patronymic: 'Иванович',
     date_of_birth: new Date('1990-01-15'),
-    role: UserRole.SPORTSMAN
+    role: UserRole.USER
   },
   {
     id: 2,
@@ -25,7 +25,7 @@ const mockUsers: User[] = [
     email: 'anna@example.com',
     patronymic: 'Сергеевна',
     date_of_birth: new Date('1985-05-20'),
-    role: UserRole.AGENT
+    role: UserRole.SUPPORT
   },
   {
     id: 3,
@@ -34,7 +34,7 @@ const mockUsers: User[] = [
     email: 'alexey@example.com',
     patronymic: 'Дмитриевич',
     date_of_birth: new Date('1988-11-10'),
-    role: UserRole.SPORTSMAN
+    role: UserRole.USER
   },
   {
     id: 4,
@@ -43,7 +43,7 @@ const mockUsers: User[] = [
     email: 'maria@example.com',
     patronymic: 'Александровна',
     date_of_birth: new Date('1992-07-25'),
-    role: UserRole.AGENT
+    role: UserRole.SUPPORT
   },
   {
     id: 5,
@@ -53,6 +53,15 @@ const mockUsers: User[] = [
     patronymic: 'Андреевич',
     date_of_birth: new Date('1980-03-05'),
     role: UserRole.ROOT
+  },
+  {
+    id: 6,
+    name: 'Елена',
+    surname: 'Соколова',
+    email: 'elena@example.com',
+    patronymic: 'Игоревна',
+    date_of_birth: new Date('1991-09-15'),
+    role: UserRole.SELLER
   }
 ]
 
@@ -60,6 +69,12 @@ const mockUsers: User[] = [
 let currentUser: User | null = null
 let accessToken: string | null = null
 let refreshToken: string | null = null
+
+// Helper function to extract user ID from token
+const extractUserIdFromToken = (token: string): number | null => {
+  const match = token.match(/^mock-(access|refresh)-token-(\d+)-\d+$/)
+  return match ? parseInt(match[2], 10) : null
+}
 
 // Mock API functions
 export const mockSignUp = async (request: SignupRequest): Promise<User> => {
@@ -72,13 +87,13 @@ export const mockSignUp = async (request: SignupRequest): Promise<User> => {
         patronymic: request.patronymic,
         email: request.email,
         date_of_birth: request.date_of_birth,
-        role: UserRole.SPORTSMAN // Default role for new users
+        role: UserRole.USER // Default role for new users
       }
 
       mockUsers.push(newUser)
       currentUser = newUser
-      accessToken = `mock-access-token-${Date.now()}`
-      refreshToken = `mock-refresh-token-${Date.now()}`
+      accessToken = `mock-access-token-${newUser.id}-${Date.now()}`
+      refreshToken = `mock-refresh-token-${newUser.id}-${Date.now()}`
 
       // Simulate storing tokens in localStorage
       if (typeof window !== 'undefined') {
@@ -99,8 +114,8 @@ export const mockLogIn = async (request: LoginRequest): Promise<User> => {
 
       if (user) {
         currentUser = user
-        accessToken = `mock-access-token-${Date.now()}`
-        refreshToken = `mock-refresh-token-${Date.now()}`
+        accessToken = `mock-access-token-${user.id}-${Date.now()}`
+        refreshToken = `mock-refresh-token-${user.id}-${Date.now()}`
 
         // Simulate storing tokens in localStorage
         if (typeof window !== 'undefined') {
@@ -127,9 +142,22 @@ export const mockGetUser = async (): Promise<User> => {
           typeof window !== 'undefined' ? localStorage.getItem('access_token') : null
 
         if (storedToken) {
-          // For mock purposes, just return the first user
-          currentUser = mockUsers[0]
-          resolve({ ...currentUser })
+          // Extract user ID from the token
+          const userId = extractUserIdFromToken(storedToken)
+
+          if (userId) {
+            // Find the user with the matching ID
+            const user = mockUsers.find((u) => u.id === userId)
+
+            if (user) {
+              currentUser = user
+              resolve({ ...currentUser })
+            } else {
+              reject(new Error('User not found'))
+            }
+          } else {
+            reject(new Error('Invalid token format'))
+          }
         } else {
           reject(new Error('Not authenticated'))
         }
@@ -168,16 +196,23 @@ export const mockRefreshToken = async (): Promise<void> => {
   return new Promise((resolve, reject) => {
     setTimeout(() => {
       if (refreshToken) {
-        accessToken = `mock-access-token-${Date.now()}`
-        refreshToken = `mock-refresh-token-${Date.now()}`
+        // Extract user ID from the current refresh token
+        const userId = extractUserIdFromToken(refreshToken)
 
-        // Update localStorage
-        if (typeof window !== 'undefined') {
-          localStorage.setItem('access_token', accessToken)
-          localStorage.setItem('refresh_token', refreshToken)
+        if (userId) {
+          accessToken = `mock-access-token-${userId}-${Date.now()}`
+          refreshToken = `mock-refresh-token-${userId}-${Date.now()}`
+
+          // Update localStorage
+          if (typeof window !== 'undefined') {
+            localStorage.setItem('access_token', accessToken)
+            localStorage.setItem('refresh_token', refreshToken)
+          }
+
+          resolve()
+        } else {
+          reject(new Error('Invalid refresh token format'))
         }
-
-        resolve()
       } else {
         reject(new Error('No refresh token available'))
       }
