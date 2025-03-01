@@ -2,7 +2,7 @@ import { userHttp as http } from '../common'
 import { LoginRequest, ResetPassword, SignupRequest, UpdateUserRequest, User } from './types'
 
 export const signUp = async (request: SignupRequest): Promise<User> => {
-  const response = await http.post('/user/register', request)
+  const response = await http.post('/user', request)
 
   localStorage.setItem('access_token', response.data.access_token)
   localStorage.setItem('refresh_token', response.data.refresh_token)

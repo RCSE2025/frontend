@@ -1,12 +1,12 @@
+import { create } from 'zustand'
 import { API } from '../api'
 import {
-  User,
   LoginRequest,
+  ResetPassword,
   SignupRequest,
   UpdateUserRequest,
-  ResetPassword
+  User
 } from '../api/user/types'
-import { create } from 'zustand'
 
 interface IUserStore {
   user: User
