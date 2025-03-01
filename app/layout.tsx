@@ -7,7 +7,7 @@ import type { Metadata, Viewport } from 'next'
 import { Inter } from 'next/font/google'
 import Image from 'next/image'
 import Link from 'next/link'
-import React from 'react'
+import React, { Suspense } from 'react'
 import './globals.css'
 
 const inter = Inter({ subsets: ['latin', 'cyrillic'] })
@@ -58,7 +58,9 @@ export default function RootLayout({
             <Links />
           </div>
         </Header>
-        <main className="min-h-[calc(100vh-78px)]">{children}</main> {modal}
+        <Suspense>
+          <main className="min-h-[calc(100vh-78px)]">{children}</main> {modal}
+        </Suspense>
       </body>
     </html>
   )
