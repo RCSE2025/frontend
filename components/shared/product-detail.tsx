@@ -1,16 +1,16 @@
-import * as React from "react"
-import Image from "next/image"
-import Link from "next/link"
-import { ChevronLeft, ChevronRight, Minus, Plus, ShoppingCart, Star } from "lucide-react"
+import { ChevronLeft, ChevronRight, Minus, Plus, ShoppingCart, Star } from 'lucide-react'
+import Image from 'next/image'
+import Link from 'next/link'
+import * as React from 'react'
 
-import { cn } from "@/lib/utils"
-import { Button } from "@/components/ui/button"
-import { Card, CardContent } from "@/components/ui/card"
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { Separator } from "@/components/ui/separator"
-import { ProductCard } from "@/components/shared/product-card"
-import type { Product } from "@/shared/types"
-import { productCategoryMap } from "@/shared/types"
+import { ProductCard } from '@/components/shared/product-card'
+import { Button } from '@/components/ui/button'
+import { Card, CardContent } from '@/components/ui/card'
+import { Separator } from '@/components/ui/separator'
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
+import { cn } from '@/lib/utils'
+import type { Product } from '@/shared/types'
+import { productCategoryMap } from '@/shared/types'
 
 interface ProductDetailProps {
   product: Product
@@ -18,11 +18,7 @@ interface ProductDetailProps {
   className?: string
 }
 
-export function ProductDetail({
-  product,
-  relatedProducts = [],
-  className,
-}: ProductDetailProps) {
+export function ProductDetail({ product, relatedProducts = [], className }: ProductDetailProps) {
   const [selectedImage, setSelectedImage] = React.useState(
     product.images.find((img) => img.isPrimary) || product.images[0]
   )
@@ -43,7 +39,7 @@ export function ProductDetail({
     setSelectedImage(product.images[newIndex])
   }
 
-  const handleThumbnailClick = (image: typeof product.images[0], index: number) => {
+  const handleThumbnailClick = (image: (typeof product.images)[0], index: number) => {
     setSelectedImage(image)
     setCurrentImageIndex(index)
   }
@@ -57,15 +53,15 @@ export function ProductDetail({
     : product.price
 
   return (
-    <div className={cn("space-y-8", className)}>
+    <div className={cn('space-y-8', className)}>
       {/* Хлебные крошки */}
       <div className="flex items-center text-sm text-muted-foreground">
         <Link href="/" className="hover:text-foreground">
           Главная
         </Link>
         <span className="mx-2">/</span>
-        <Link 
-          href={`/category/${product.category.toLowerCase()}`} 
+        <Link
+          href={`/category/${product.category.toLowerCase()}`}
           className="hover:text-foreground"
         >
           {productCategoryMap[product.category]}
@@ -79,12 +75,7 @@ export function ProductDetail({
         {/* Галерея изображений */}
         <div className="space-y-4">
           <div className="relative aspect-square overflow-hidden rounded-lg border">
-            <Image
-              src={selectedImage.url}
-              alt={selectedImage.alt}
-              fill
-              className="object-cover"
-            />
+            <Image src={selectedImage.url} alt={selectedImage.id} fill className="object-cover" />
             {product.images.length > 1 && (
               <>
                 <Button
@@ -121,17 +112,12 @@ export function ProductDetail({
                 <button
                   key={image.id}
                   className={cn(
-                    "relative h-20 w-20 flex-shrink-0 overflow-hidden rounded-md border",
-                    selectedImage.id === image.id && "ring-2 ring-primary"
+                    'relative h-20 w-20 flex-shrink-0 overflow-hidden rounded-md border',
+                    selectedImage.id === image.id && 'ring-2 ring-primary'
                   )}
                   onClick={() => handleThumbnailClick(image, index)}
                 >
-                  <Image
-                    src={image.url}
-                    alt={image.alt}
-                    fill
-                    className="object-cover"
-                  />
+                  <Image src={image.url} alt={product.title} fill className="object-cover" />
                 </button>
               ))}
             </div>
@@ -144,17 +130,19 @@ export function ProductDetail({
             <h1 className="text-3xl font-bold">{product.title}</h1>
             <div className="mt-2 flex items-center">
               <div className="flex items-center">
-                {Array(5).fill(0).map((_, i) => (
-                  <Star
-                    key={i}
-                    className={cn(
-                      "h-5 w-5",
-                      i < Math.floor(product.rating)
-                        ? "fill-yellow-400 text-yellow-400"
-                        : "fill-gray-300 text-gray-300"
-                    )}
-                  />
-                ))}
+                {Array(5)
+                  .fill(0)
+                  .map((_, i) => (
+                    <Star
+                      key={i}
+                      className={cn(
+                        'h-5 w-5',
+                        i < Math.floor(product.rating)
+                          ? 'fill-yellow-400 text-yellow-400'
+                          : 'fill-gray-300 text-gray-300'
+                      )}
+                    />
+                  ))}
                 <span className="ml-2 text-sm text-muted-foreground">
                   {product.rating} ({product.reviewCount} отзывов)
                 </span>
@@ -164,9 +152,7 @@ export function ProductDetail({
 
           <div className="space-y-2">
             <div className="flex items-baseline gap-2">
-              <span className="text-3xl font-bold">
-                {discountedPrice.toFixed(2)} ₽
-              </span>
+              <span className="text-3xl font-bold">{discountedPrice.toFixed(2)} ₽</span>
               {product.discount && (
                 <span className="text-xl text-muted-foreground line-through">
                   {product.price.toFixed(2)} ₽
@@ -224,21 +210,14 @@ export function ProductDetail({
                 </Button>
               </div>
               <Button className="flex-1" disabled={!product.inStock}>
-                <ShoppingCart className="mr-2 h-4 w-4" />
-                В корзину
+                <ShoppingCart className="mr-2 h-4 w-4" />В корзину
               </Button>
             </div>
 
-            {product.shippingInfo && (
-              <div className="space-y-1 text-sm">
-                {product.shippingInfo.freeShipping && (
-                  <p className="text-green-600">Бесплатная доставка</p>
-                )}
-                <p>
-                  Ожидаемая доставка: {product.shippingInfo.estimatedDelivery}
-                </p>
-              </div>
-            )}
+            <div className="space-y-1 text-sm">
+              <p className="text-green-600">Бесплатная доставка</p>
+              <p>Ожидаемая доставка: {product.estimatedDelivery}</p>
+            </div>
           </div>
         </div>
       </div>
@@ -248,9 +227,7 @@ export function ProductDetail({
         <TabsList className="w-full justify-start border-b">
           <TabsTrigger value="description">Описание</TabsTrigger>
           <TabsTrigger value="specifications">Характеристики</TabsTrigger>
-          <TabsTrigger value="reviews">
-            Отзывы ({product.reviews?.length || 0})
-          </TabsTrigger>
+          <TabsTrigger value="reviews">Отзывы ({product.reviews?.length || 0})</TabsTrigger>
         </TabsList>
         <TabsContent value="description" className="mt-4">
           <div className="prose max-w-none">
@@ -263,8 +240,8 @@ export function ProductDetail({
               <div
                 key={index}
                 className={cn(
-                  "grid grid-cols-2 gap-4 px-4 py-3",
-                  index % 2 === 0 ? "bg-muted/50" : "bg-transparent"
+                  'grid grid-cols-2 gap-4 px-4 py-3',
+                  index % 2 === 0 ? 'bg-muted/50' : 'bg-transparent'
                 )}
               >
                 <div className="text-sm font-medium">{spec.name}</div>
@@ -287,17 +264,19 @@ export function ProductDetail({
                         </p>
                       </div>
                       <div className="flex items-center">
-                        {Array(5).fill(0).map((_, i) => (
-                          <Star
-                            key={i}
-                            className={cn(
-                              "h-4 w-4",
-                              i < review.rating
-                                ? "fill-yellow-400 text-yellow-400"
-                                : "fill-gray-300 text-gray-300"
-                            )}
-                          />
-                        ))}
+                        {Array(5)
+                          .fill(0)
+                          .map((_, i) => (
+                            <Star
+                              key={i}
+                              className={cn(
+                                'h-4 w-4',
+                                i < review.rating
+                                  ? 'fill-yellow-400 text-yellow-400'
+                                  : 'fill-gray-300 text-gray-300'
+                              )}
+                            />
+                          ))}
                       </div>
                     </div>
                     <p className="text-sm">{review.comment}</p>
@@ -318,9 +297,6 @@ export function ProductDetail({
                         ))}
                       </div>
                     )}
-                    <div className="mt-2 text-xs text-muted-foreground">
-                      {review.helpful} человек считают этот отзыв полезным
-                    </div>
                   </CardContent>
                 </Card>
               ))

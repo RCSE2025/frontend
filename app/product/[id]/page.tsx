@@ -62,8 +62,7 @@ const products: Product[] = [
         rating: 5,
         comment:
           'Отличные наушники! Шумоподавление работает превосходно, звук чистый и насыщенный. Батарея держится даже дольше заявленного времени. Очень доволен покупкой!',
-        date: '2025-02-15',
-        helpful: 24
+        date: '2025-02-15'
       },
       {
         id: 'rev2',
@@ -73,7 +72,6 @@ const products: Product[] = [
         comment:
           'Хорошее качество звука и шумоподавления. Комфортно сидят на ушах даже при длительном ношении. Единственный минус - немного тяжеловаты.',
         date: '2025-02-10',
-        helpful: 15,
         images: [
           'https://images.unsplash.com/photo-1606229365485-93a3b8ee0385?q=80&w=1974&auto=format&fit=crop'
         ]
@@ -85,24 +83,14 @@ const products: Product[] = [
         rating: 3,
         comment:
           'Звук хороший, но шумоподавление среднее. В метро всё равно слышно окружающих. Батарея держится хорошо.',
-        date: '2025-01-28',
-        helpful: 8
+        date: '2025-01-28'
       }
     ],
     relatedProducts: ['2', '3', '7'],
     tags: ['наушники', 'bluetooth', 'шумоподавление', 'аудио'],
     brand: 'SoundMaster',
     sku: 'SM-HP-100',
-    weight: 250,
-    dimensions: {
-      width: 18,
-      height: 20,
-      depth: 8
-    },
-    shippingInfo: {
-      freeShipping: true,
-      estimatedDelivery: '1-3 рабочих дня'
-    }
+    estimatedDelivery: '1-3 рабочих дня'
   },
   {
     id: '2',
@@ -145,8 +133,7 @@ const products: Product[] = [
         rating: 5,
         comment:
           'Отличные часы! Точно отслеживают пульс и сон, уведомления работают без задержек. Батарея держится около недели при активном использовании.',
-        date: '2025-02-20',
-        helpful: 18
+        date: '2025-02-20'
       },
       {
         id: 'rev2',
@@ -155,24 +142,14 @@ const products: Product[] = [
         rating: 3,
         comment:
           'Часы неплохие, но GPS иногда теряет сигнал. Функции мониторинга здоровья работают хорошо.',
-        date: '2025-02-05',
-        helpful: 10
+        date: '2025-02-05'
       }
     ],
     relatedProducts: ['1', '14'],
     tags: ['часы', 'фитнес', 'здоровье', 'гаджеты'],
     brand: 'TechWear',
     sku: 'TW-SW-200',
-    weight: 32,
-    dimensions: {
-      width: 4.5,
-      height: 4.5,
-      depth: 1.2
-    },
-    shippingInfo: {
-      freeShipping: true,
-      estimatedDelivery: '1-3 рабочих дня'
-    }
+    estimatedDelivery: '1-3 рабочих дня'
   },
   {
     id: '3',
@@ -222,7 +199,6 @@ const products: Product[] = [
         comment:
           'Отличная колонка! Звук мощный и чистый, басы хорошие. Брал с собой на пляж - работает отлично, даже после попадания воды.',
         date: '2025-02-18',
-        helpful: 22,
         images: [
           'https://images.unsplash.com/photo-1533576162942-4189c7b8c814?q=80&w=1970&auto=format&fit=crop'
         ]
@@ -234,24 +210,14 @@ const products: Product[] = [
         rating: 4,
         comment:
           'Хорошая колонка за свои деньги. Звук качественный, батарея держится долго. Единственный минус - немного тяжеловата для переноски.',
-        date: '2025-02-10',
-        helpful: 15
+        date: '2025-02-10'
       }
     ],
     relatedProducts: ['1', '7'],
     tags: ['колонка', 'bluetooth', 'аудио', 'водонепроницаемая'],
     brand: 'SoundMaster',
     sku: 'SM-SP-300',
-    weight: 540,
-    dimensions: {
-      width: 8,
-      height: 18,
-      depth: 8
-    },
-    shippingInfo: {
-      freeShipping: true,
-      estimatedDelivery: '1-3 рабочих дня'
-    }
+    estimatedDelivery: '1-3 рабочих дня'
   },
   {
     id: '7',
@@ -294,8 +260,7 @@ const products: Product[] = [
         rating: 5,
         comment:
           'Отличная зарядная станция! Заряжает быстро и без проблем. Очень удобно заряжать несколько устройств одновременно.',
-        date: '2025-02-12',
-        helpful: 19
+        date: '2025-02-12'
       },
       {
         id: 'rev2',
@@ -304,24 +269,14 @@ const products: Product[] = [
         rating: 4,
         comment:
           'Хорошая станция, но иногда нужно точно позиционировать устройства для начала зарядки. В целом довольна покупкой.',
-        date: '2025-02-05',
-        helpful: 12
+        date: '2025-02-05'
       }
     ],
     relatedProducts: ['1', '2', '3'],
     tags: ['зарядка', 'беспроводная', 'электроника', 'аксессуары'],
     brand: 'PowerTech',
     sku: 'PT-WC-400',
-    weight: 320,
-    dimensions: {
-      width: 18,
-      height: 1.5,
-      depth: 12
-    },
-    shippingInfo: {
-      freeShipping: true,
-      estimatedDelivery: '1-3 рабочих дня'
-    }
+    estimatedDelivery: '1-3 рабочих дня'
   }
 ]
 
