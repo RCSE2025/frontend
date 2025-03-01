@@ -3,7 +3,7 @@
 import { cn } from '@/lib/utils'
 import { UserRole } from '@/shared/api/user/types'
 import { useUser } from '@/shared/store/useUser'
-import { FileSliders, ShoppingBag } from 'lucide-react'
+import { BriefcaseBusiness, FileSliders, ShoppingBag } from 'lucide-react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import React from 'react'
@@ -36,6 +36,8 @@ export const Links: React.FC<Props> = ({ className }) => {
 
   const isSellerAccessed = user.role === UserRole.SELLER || user.role === UserRole.SELF_EMPLOYED
 
+  const isPasportVerified = user.is_pasport_verified
+
   return (
     <Container
       className={cn(
@@ -57,6 +59,22 @@ export const Links: React.FC<Props> = ({ className }) => {
             />
           </Link>
         ))}
+
+      {isPasportVerified && (
+        <Link href="/register/business">
+          <Title
+            size="xs"
+            className={cn('flex flex-row gap-1 items-center', {
+              underline: pathname.startsWith('/register/business'),
+              'bg-transparent': !pathname.startsWith('/register/business')
+            })}
+          >
+            <BriefcaseBusiness />
+            Продавать на Ryazan Market
+          </Title>
+        </Link>
+      )}
+
       {isAdminAccessed && (
         <Link href={adminLink}>
           <Title

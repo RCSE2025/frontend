@@ -13,6 +13,7 @@ export interface User {
   email: string
   patronymic: string
   date_of_birth: Date
+  is_pasport_verified: boolean
   role: string
 }
 

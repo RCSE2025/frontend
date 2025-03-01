@@ -16,7 +16,8 @@ const mockUsers: User[] = [
     email: 'ivan@example.com',
     patronymic: 'Иванович',
     date_of_birth: new Date('1990-01-15'),
-    role: UserRole.USER
+    role: UserRole.USER,
+    is_pasport_verified: true
   },
   {
     id: 2,
@@ -25,7 +26,8 @@ const mockUsers: User[] = [
     email: 'anna@example.com',
     patronymic: 'Сергеевна',
     date_of_birth: new Date('1985-05-20'),
-    role: UserRole.SUPPORT
+    role: UserRole.SUPPORT,
+    is_pasport_verified: true
   },
   {
     id: 3,
@@ -34,7 +36,8 @@ const mockUsers: User[] = [
     email: 'alexey@example.com',
     patronymic: 'Дмитриевич',
     date_of_birth: new Date('1988-11-10'),
-    role: UserRole.USER
+    role: UserRole.USER,
+    is_pasport_verified: true
   },
   {
     id: 4,
@@ -43,7 +46,8 @@ const mockUsers: User[] = [
     email: 'maria@example.com',
     patronymic: 'Александровна',
     date_of_birth: new Date('1992-07-25'),
-    role: UserRole.SUPPORT
+    role: UserRole.SUPPORT,
+    is_pasport_verified: true
   },
   {
     id: 5,
@@ -52,7 +56,8 @@ const mockUsers: User[] = [
     email: 'dmitry@example.com',
     patronymic: 'Андреевич',
     date_of_birth: new Date('1980-03-05'),
-    role: UserRole.ROOT
+    role: UserRole.ROOT,
+    is_pasport_verified: true
   },
   {
     id: 6,
@@ -61,7 +66,8 @@ const mockUsers: User[] = [
     email: 'elena@example.com',
     patronymic: 'Игоревна',
     date_of_birth: new Date('1991-09-15'),
-    role: UserRole.SELLER
+    role: UserRole.SELLER,
+    is_pasport_verified: true
   }
 ]
 
@@ -87,6 +93,7 @@ export const mockSignUp = async (request: SignupRequest): Promise<User> => {
         patronymic: request.patronymic,
         email: request.email,
         date_of_birth: request.date_of_birth,
+        is_pasport_verified: true,
         role: UserRole.USER // Default role for new users
       }
 
