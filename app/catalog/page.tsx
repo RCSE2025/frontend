@@ -166,8 +166,8 @@ export default function CatalogPage() {
               onFilterChange={handleFilterChange}
               availableCategories={Object.values(ProductCategory)}
               availableBrands={availableBrands}
-              minPrice={0}
-              maxPrice={2000}
+              minPrice={1}
+              maxPrice={100000}
             />
           </div>
 
