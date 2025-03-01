@@ -4,76 +4,101 @@
 
 @layer base {
   :root {
-    --background: 0 0% 100%;
-    --secondary-background: 0 0% 96%;
-    --foreground: 222.2 84% 4.9%;
-    --card: 0 0% 100%;
-    --card-foreground: 222.2 84% 4.9%;
-    --popover: 0 0% 100%;
-    --popover-foreground: 222.2 84% 4.9%;
-    --primary: 222.2 47.4% 11.2%;
+    /* Основные цвета */
+    --color-dark-blue: 222 15% 16%; /* #22262d */
+    --color-light-grey: 220 46% 91%; /* #e1e7f4 */
+    --color-grey-border: 220 50% 86%; /* #d2ddf3 */
+    --color-grey: 220 15% 55%; /* #79869f */
+    --color-white: 220 66% 97%; /* #f4f7fc */
+    --color-main-accent: 220 100% 55%; /* #2479ff */
+    --color-secondary-accent: 210 100% 50%; /* #007aff */
+    --color-warning-red: 340 100% 54%; /* #ff0e66 */
+    --color-emerald: 158 100% 43%; /* #00d88d */
+    --color-emerald-secondary: 158 100% 48%; /* #0effab */
+    --color-purple: 290 100% 65%; /* #da46ff */
+
+    /* Градиенты */
+    --color-gradient-blue-start: 190 100% 54%; /* #0edbff */
+    --color-gradient-blue-end: 220 100% 50%; /* #0e6bff */
+
+    --color-gradient-purple-start: 290 100% 65%; /* #da46ff */
+    --color-gradient-purple-end: 220 100% 55%; /* #428bff */
+
+    --color-gradient-green-start: 158 100% 45%; /* #00e394 */
+    --color-gradient-green-end: 220 100% 50%; /* #0e6bff */
+
+    --color-gradient-red-start: 220 100% 50%; /* #0e6bff */
+    --color-gradient-red-end: 340 100% 54%; /* #ff0e66 */
+
+    --color-gradient-dark-start: 222 15% 16%; /* #22262d */
+    --color-gradient-dark-end: 220 40% 26%; /* #203d6a */
+
+    /* Линейные градиенты */
+    --gradient-blue: linear-gradient(
+      to right,
+      var(--color-gradient-blue-start) 0%,
+      var(--color-gradient-blue-end) 100%
+    );
+    --gradient-purple: linear-gradient(
+      to right,
+      var(--color-gradient-purple-start) 0%,
+      var(--color-gradient-purple-end) 100%
+    );
+    --gradient-green: linear-gradient(
+      to right,
+      var(--color-gradient-green-start) 0%,
+      var(--color-gradient-green-end) 100%
+    );
+    --gradient-red: linear-gradient(
+      to right,
+      var(--color-gradient-red-start) 0%,
+      var(--color-gradient-red-end) 100%
+    );
+    --gradient-dark: linear-gradient(
+      to right,
+      var(--color-gradient-dark-start) 0%,
+      var(--color-gradient-dark-end) 100%
+    );
+
+    /* Обновленный Tailwind-палитра */
+    --background: 220 66% 97%; /* Белый фон */
+    --secondary-background: 220 46% 91%;
+    --foreground: 222 47% 11%;
+    --card: 220 66% 97%;
+    --card-foreground: 222 47% 11%;
+    --popover: 220 66% 97%;
+    --popover-foreground: 222 47% 11%;
+    --primary: 222 47% 11%;
     --primary-foreground: 210 40% 98%;
-    --secondary: 210 40% 96.1%;
-    --secondary-foreground: 222.2 47.4% 11.2%;
-    --muted: 210 40% 96.1%;
-    --muted-foreground: 215.4 16.3% 46.9%;
-    --accent: 210 40% 96.1%;
-    --accent-foreground: 222.2 47.4% 11.2%;
-    --destructive: 0 84.2% 60.2%;
+    --secondary: 210 40% 96%;
+    --secondary-foreground: 222 47% 11%;
+    --muted: 210 40% 96%;
+    --muted-foreground: 215 16% 47%;
+    --accent: 210 40% 96%;
+    --accent-foreground: 222 47% 11%;
+    --destructive: 340 100% 54%;
     --destructive-foreground: 210 40% 98%;
-    --border: 214.3 31.8% 91.4%;
-    --input: 214.3 31.8% 91.4%;
-    --ring: 222.2 84% 4.9%;
+    --border: 214 32% 91%;
+    --input: 214 32% 91%;
+    --ring: 222 84% 5%;
     --radius: 0.5rem;
+
+    /* Графики */
     --chart-1: 12 76% 61%;
     --chart-2: 173 58% 39%;
     --chart-3: 197 37% 24%;
     --chart-4: 43 74% 66%;
     --chart-5: 27 87% 67%;
-    --sidebar-background: 0 0% 98%;
-    --sidebar-foreground: 240 5.3% 26.1%;
-    --sidebar-primary: 240 5.9% 10%;
-    --sidebar-primary-foreground: 0 0% 98%;
-    --sidebar-accent: 240 4.8% 95.9%;
-    --sidebar-accent-foreground: 240 5.9% 10%;
-    --sidebar-border: 220 13% 91%;
-    --sidebar-ring: 217.2 91.2% 59.8%;
-  }
 
-  .dark {
-    --background: 0 0% 23%;
-    --secondary-background: 0 0% 17%;
-    --foreground: 210 40% 98%;
-    --card: 222.2 84% 4.9%;
-    --card-foreground: 210 40% 98%;
-    --popover: 222.2 84% 4.9%;
-    --popover-foreground: 210 40% 98%;
-    --primary: 210 40% 98%;
-    --primary-foreground: 222.2 47.4% 11.2%;
-    --secondary: 217.2 32.6% 17.5%;
-    --secondary-foreground: 210 40% 98%;
-    --muted: 217.2 32.6% 17.5%;
-    --muted-foreground: 215 20.2% 65.1%;
-    --accent: 217.2 32.6% 17.5%;
-    --accent-foreground: 210 40% 98%;
-    --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 210 40% 98%;
-    --border: 217.2 32.6% 17.5%;
-    --input: 217.2 32.6% 17.5%;
-    --ring: 212.7 26.8% 83.9%;
-    --chart-1: 220 70% 50%;
-    --chart-2: 160 60% 45%;
-    --chart-3: 30 80% 55%;
-    --chart-4: 280 65% 60%;
-    --chart-5: 340 75% 55%;
-    --sidebar-background: 240 5.9% 10%;
-    --sidebar-foreground: 240 4.8% 95.9%;
-    --sidebar-primary: 224.3 76.3% 48%;
-    --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 240 3.7% 15.9%;
-    --sidebar-accent-foreground: 240 4.8% 95.9%;
-    --sidebar-border: 240 3.7% 15.9%;
-    --sidebar-ring: 217.2 91.2% 59.8%;
+    /* Сайдбар */
+    --sidebar-background: 220 46% 92%;
+    --sidebar-foreground: 240 5% 26%;
+    --sidebar-primary: 240 6% 10%;
+    --sidebar-primary-foreground: 220 66% 97%;
+    --sidebar-accent: 240 5% 96%;
+    --sidebar-accent-foreground: 240 6% 10%;
+    --sidebar-border: 220 13% 91%;
+    --sidebar-ring: 217 91% 60%;
   }
 }
 
