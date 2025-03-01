@@ -8,8 +8,9 @@ import { useRouter } from 'next/navigation'
 import { toast } from 'sonner'
 import { PageModal } from '@/components/shared/modal'
 import { usePathname } from 'next/navigation'
+import Link from 'next/link'
 
-export default function PageTwoModal() {
+export default function Login() {
   const pathname = usePathname()
 
   const { logIn, updateLoggedIn, sendResetPasswordEmail } = useUser()
@@ -45,6 +46,12 @@ export default function PageTwoModal() {
           onResetPassword={onResetPassword}
           className="self-center bg-background p-5 border-[1px] border-border rounded-lg"
         />
+        <div className="mt-2 text-center">
+          Нет аккаунта?{' '}
+          <Link href="/login/register" className="text-primary hover:underline cursor-pointer">
+            Зарегистрироваться
+          </Link>
+        </div>
       </PageModal>
     )
   )
