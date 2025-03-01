@@ -12,6 +12,7 @@ export default function Login() {
   const router = useRouter()
 
   const onSubmit = async (request: LoginRequest) => {
+    console.log(request)
     logIn(request)
       .then(() => {
         updateLoggedIn(true)

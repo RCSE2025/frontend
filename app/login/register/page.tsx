@@ -12,6 +12,7 @@ export default function SignUp() {
   const router = useRouter()
 
   const onSubmit = async (request: SignupRequest) => {
+    router.push('/otp')
     signUp(request)
       .then(() => {
         updateLoggedIn(true)
