@@ -11,7 +11,7 @@ import { Container } from './container'
 import { Title } from './title'
 
 const links = [
-  { href: '/calendar', text: 'Календарь' },
+  { href: '/catalog', text: 'Каталог' },
   { href: '/profile', text: 'Профиль', loggedIn: true, notRoot: true },
   { href: '/lk', text: 'Личный кабинет', loggedIn: true },
   { href: '/login', text: 'Профиль', loggedIn: false }
