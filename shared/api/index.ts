@@ -1,3 +1,16 @@
 import { userApi } from './user'
+import { Ticket } from './ticket'
+import { MockAPI } from './mock'
 
-export const API = { User: userApi }
+// Use mock API for development
+const useMockAPI = true
+
+export const API = useMockAPI
+  ? {
+      User: MockAPI.User,
+      Ticket: MockAPI.Ticket
+    }
+  : {
+      User: userApi,
+      Ticket
+    }

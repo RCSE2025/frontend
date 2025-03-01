@@ -1,0 +1,163 @@
+import { create } from 'zustand'
+import { API } from '../api'
+import { Ticket, TicketFilters } from '../types'
+import {
+  AddTicketCommentRequest,
+  CreateTicketRequest,
+  GetTicketsResponse,
+  UpdateTicketRequest
+} from '../api/ticket/types'
+
+interface ITicketStore {
+  tickets: Ticket[]
+  currentTicket: Ticket | null
+  totalTickets: number
+  loading: boolean
+  admins: { id: string; name: string }[]
+  filters: TicketFilters
+  page: number
+  limit: number
+
+  setFilters: (filters: TicketFilters) => void
+  setPage: (page: number) => void
+  setLimit: (limit: number) => void
+
+  fetchTickets: () => Promise<void>
+  fetchTicketById: (id: string) => Promise<void>
+  createTicket: (request: CreateTicketRequest) => Promise<void>
+  updateTicket: (request: UpdateTicketRequest) => Promise<void>
+  deleteTicket: (id: string) => Promise<void>
+  addComment: (request: AddTicketCommentRequest) => Promise<void>
+  fetchAdmins: () => Promise<void>
+}
+
+export const useTickets = create<ITicketStore>((set, get) => ({
+  tickets: [],
+  currentTicket: null,
+  totalTickets: 0,
+  loading: false,
+  admins: [],
+  filters: {},
+  page: 1,
+  limit: 10,
+
+  setFilters: (filters: TicketFilters) => set({ filters, page: 1 }),
+  setPage: (page: number) => set({ page }),
+  setLimit: (limit: number) => set({ limit, page: 1 }),
+
+  fetchTickets: async () => {
+    const { filters, page, limit } = get()
+    set({ loading: true })
+
+    try {
+      const response: GetTicketsResponse = await API.Ticket.getTickets(filters, page, limit)
+      set({ tickets: response.tickets, totalTickets: response.total, loading: false })
+    } catch (error) {
+      console.error('Error fetching tickets:', error)
+      set({ loading: false })
+    }
+  },
+
+  fetchTicketById: async (id: string) => {
+    set({ loading: true })
+
+    try {
+      const ticket = await API.Ticket.getTicketById(id)
+      set({ currentTicket: ticket, loading: false })
+    } catch (error) {
+      console.error('Error fetching ticket:', error)
+      set({ loading: false })
+    }
+  },
+
+  createTicket: async (request: CreateTicketRequest) => {
+    set({ loading: true })
+
+    try {
+      await API.Ticket.createTicket(request)
+      await get().fetchTickets()
+    } catch (error) {
+      console.error('Error creating ticket:', error)
+      set({ loading: false })
+    }
+  },
+
+  updateTicket: async (request: UpdateTicketRequest) => {
+    set({ loading: true })
+
+    try {
+      const updatedTicket = await API.Ticket.updateTicket(request)
+
+      // Update current ticket if it's the one being updated
+      if (get().currentTicket?.id === updatedTicket.id) {
+        set({ currentTicket: updatedTicket })
+      }
+
+      // Update ticket in the list
+      set((state) => ({
+        tickets: state.tickets.map((ticket) =>
+          ticket.id === updatedTicket.id ? updatedTicket : ticket
+        ),
+        loading: false
+      }))
+    } catch (error) {
+      console.error('Error updating ticket:', error)
+      set({ loading: false })
+    }
+  },
+
+  deleteTicket: async (id: string) => {
+    set({ loading: true })
+
+    try {
+      await API.Ticket.deleteTicket(id)
+
+      // Remove ticket from the list
+      set((state) => ({
+        tickets: state.tickets.filter((ticket) => ticket.id !== id),
+        loading: false
+      }))
+
+      // Clear current ticket if it's the one being deleted
+      if (get().currentTicket?.id === id) {
+        set({ currentTicket: null })
+      }
+    } catch (error) {
+      console.error('Error deleting ticket:', error)
+      set({ loading: false })
+    }
+  },
+
+  addComment: async (request: AddTicketCommentRequest) => {
+    set({ loading: true })
+
+    try {
+      const updatedTicket = await API.Ticket.addTicketComment(request)
+
+      // Update current ticket if it's the one being commented on
+      if (get().currentTicket?.id === updatedTicket.id) {
+        set({ currentTicket: updatedTicket })
+      }
+
+      // Update ticket in the list
+      set((state) => ({
+        tickets: state.tickets.map((ticket) =>
+          ticket.id === updatedTicket.id ? updatedTicket : ticket
+        ),
+        loading: false
+      }))
+    } catch (error) {
+      console.error('Error adding comment:', error)
+      set({ loading: false })
+    }
+  },
+
+  fetchAdmins: async () => {
+    try {
+      const admins = await API.Ticket.getAdmins()
+      set({ admins })
+    } catch (error) {
+      console.error('Error fetching admins:', error)
+    }
+  }
+}))
