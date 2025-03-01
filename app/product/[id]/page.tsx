@@ -5,9 +5,7 @@ import { useEffect, useState } from 'react'
 
 import { Container } from '@/components/shared/container'
 import { ProductDetail } from '@/components/shared/product-detail'
-import { productApi } from '@/shared/api/product'
-import { adaptProductToUI } from '@/shared/api/adapters'
-import type { Product } from '@/shared/types'
+import { IProduct, productApi } from '@/shared/api/product'
 
 interface ProductPageProps {
   params: {
@@ -17,8 +15,8 @@ interface ProductPageProps {
 
 export default function ProductPage({ params }: ProductPageProps) {
   const { id } = params
-  const [product, setProduct] = useState<Product | null>(null)
-  const [relatedProducts, setRelatedProducts] = useState<Product[]>([])
+  const [product, setProduct] = useState<IProduct | null>(null)
+  const [relatedProducts, setRelatedProducts] = useState<IProduct[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
 
@@ -27,24 +25,11 @@ export default function ProductPage({ params }: ProductPageProps) {
       try {
         setLoading(true)
         setError(null)
+        const productResponse = await productApi.getProductById(id)
 
-        const productData = await productApi.getProductById(id)
+        setProduct(productResponse)
 
-        
-        const adaptedProduct = adaptProductToUI(productData)
-        setProduct(adaptedProduct)
-
-        // Загрузка связанных товаров
-        // TODO: Добавить API для получения рекомендованных товаров
-        const recommendedProducts = await productApi.getSellerProducts({
-          limit: 4,
-          categoryId: productData.categoryId
-        })
-        const adaptedRecommended = recommendedProducts
-          .filter(p => p.id !== id)
-          .map(adaptProductToUI)
-        setRelatedProducts(adaptedRecommended)
-
+        const recommendedProducts = await productApi.getAllProductsFilter()
       } catch (err) {
         setError(err instanceof Error ? err.message : 'Ошибка при загрузке товара')
         setProduct(null)

@@ -61,21 +61,13 @@ export default function CatalogPage() {
     setError(null)
     try {
       const filterOptions: IProductFilterOptions = {
-        search: filters.searchQuery,
-        categoryId: filters.categories?.[0],
-        minPrice: filters.priceRange?.min,
-        maxPrice: filters.priceRange?.max,
-        sortBy:
-          filters.sortBy === 'price-asc'
-            ? 'price'
-            : filters.sortBy === 'price-desc'
-              ? 'price'
-              : filters.sortBy === 'rating'
-                ? 'rating'
-                : 'createdAt',
-        sortOrder: filters.sortBy?.includes('-desc') ? 'desc' : 'asc',
-        page: 1,
-        limit: 50
+        categories: filters.categories,
+        brands: filters.brands,
+        in_stock: filters.inStock,
+        on_sale: filters.onSale,
+        rating: filters.rating,
+        search_query: filters.searchQuery,
+        sort_by: filters.sortBy
       }
 
       const response = await productApi.getAllProductsFilter(filterOptions)
@@ -222,11 +214,11 @@ export default function CatalogPage() {
                         key={product.id}
                         product={{
                           id: product.id,
-                          title: product.name,
+                          title: product.title,
                           price: product.price,
                           rating: product.rating,
-                          image: product.images[0] || '',
-                          category: product.categoryId
+                          image: product.images.at(0)?.url || '',
+                          category: product.category
                         }}
                       />
                     ))}

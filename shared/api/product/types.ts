@@ -1,3 +1,15 @@
+export enum ProductCategory {
+  ELECTRONICS = 'ELECTRONICS',
+  HOME = 'HOME',
+  FASHION = 'FASHION',
+  SPORTS = 'SPORTS',
+  BEAUTY = 'BEAUTY',
+  TOYS = 'TOYS',
+  BOOKS = 'BOOKS',
+  FOOD = 'FOOD',
+  OTHER = 'OTHER'
+}
+
 export interface IModelBase {
   created_at: Date
   updated_at: Date
@@ -21,10 +33,18 @@ export interface IReview extends IModelBase {
   user_name: string
 }
 
+export interface IProductMedia extends IModelBase {
+  file_uuid: string
+  id: number
+  is_primary: boolean
+  product_id: number
+  url: string
+}
+
 export interface IProduct extends IModelBase {
-  id: 1
-  business_id: 1
-  price: 5000
+  id: number
+  business_id: number
+  price: number
   title: string
   description: string
   quantity: number
@@ -35,15 +55,23 @@ export interface IProduct extends IModelBase {
   brand: string
   sku: string
   estimated_delivery: string
-  images: string[]
+  images: IProductMedia[]
   specifications: IProductSpecifications
   reviews?: IReview[]
   related_products?: number[]
 }
 
+export interface PriceRange {
+  min: number
+  max: number
+}
+
 export interface IProductFilterOptions {
-  category?: string
-  minPrice?: number
-  maxPrice?: number
-  search?: string
+  search_query?: string
+  categories?: ProductCategory[]
+  brands?: string[]
+  rating?: number
+  in_stock?: boolean
+  on_sale?: boolean
+  sort_by?: 'price-asc' | 'price-desc' | 'rating' | 'newest'
 }

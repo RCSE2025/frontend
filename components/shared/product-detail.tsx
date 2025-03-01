@@ -9,18 +9,18 @@ import { Card, CardContent } from '@/components/ui/card'
 import { Separator } from '@/components/ui/separator'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { cn } from '@/lib/utils'
-import type { Product } from '@/shared/types'
+import { IProduct } from '@/shared/api/product'
 import { productCategoryMap } from '@/shared/types'
 
 interface ProductDetailProps {
-  product: Product
-  relatedProducts?: Product[]
+  product: IProduct
+  relatedProducts?: IProduct[]
   className?: string
 }
 
 export function ProductDetail({ product, relatedProducts = [], className }: ProductDetailProps) {
   const [selectedImage, setSelectedImage] = React.useState(
-    product.images.find((img) => img.isPrimary) || product.images[0]
+    product.images.find((img) => img) || product.images[0]
   )
   const [quantity, setQuantity] = React.useState(1)
   const [currentImageIndex, setCurrentImageIndex] = React.useState(
