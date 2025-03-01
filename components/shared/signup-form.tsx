@@ -21,19 +21,13 @@ import { Calendar } from '../ui/calendar'
 import { Popover, PopoverContent, PopoverTrigger } from '../ui/popover'
 import { Title } from './title'
 
-const roles = {
-  SPORTSMAN: 'Спортсмен',
-  AGENT: 'Представитель'
-}
-
 const formSchema = z
   .object({
-    email: z.string().email(),
-    name: z.string(),
     surname: z.string(),
+    name: z.string(),
     patronymic: z.string(),
     date_of_birth: z.date(),
-    role: z.enum(Object.keys(roles) as [keyof typeof roles]),
+    email: z.string().email(),
     password: z.string().min(4),
     confirm: z.string().min(4)
   })
@@ -51,8 +45,7 @@ export const SignUpForm: React.FC<Props> = ({ onSubmit, className }) => {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      date_of_birth: new Date(),
-      role: 'SPORTSMAN'
+      date_of_birth: new Date()
     }
   })
 

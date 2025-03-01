@@ -26,7 +26,6 @@ export interface SignupRequest {
   email: string
   password: string
   date_of_birth: Date
-  role: string
 }
 
 export interface UpdateUserRequest {
