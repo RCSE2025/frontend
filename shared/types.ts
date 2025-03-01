@@ -41,12 +41,14 @@ export interface ProductImage {
   id: string
   url: string
   isPrimary?: boolean
+  alt: string
 }
 
 export interface Product {
   id: string
   title: string
   description: string
+  tags: string[]
   price: number
   rating: number
   reviewCount: number
