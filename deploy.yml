@@ -7,19 +7,18 @@ services:
     deploy:
       labels:
         # loki
-        - "logging=promtail"
-        - "logging_jobname=containerlogs"
+        - 'logging=promtail'
+        - 'logging_jobname=containerlogs'
 
-        - "traefik.enable=true"
-        - "traefik.http.routers.test-hack-nextjs.rule=Host(`hack.vingp.dev`) || Host(`www.hack.vingp.dev`)"
-        - "traefik.http.routers.test-hack-nextjs.entrypoints=https,http"
-        - "traefik.http.routers.test-hack-nextjs.tls.certresolver=myresolver"
-        - "traefik.http.services.test-hack-nextjs.loadbalancer.server.port=3000"
-        - "traefik.http.routers.test-hack-nextjs.tls=true"
-        - "traefik.docker.network=traefik-swarm"
-        - "traefik.docker.lbswarm=true"
-        - "traefik.http.routers.test-hack-nextjs.service=test-hack-nextjs"
-
+        - 'traefik.enable=true'
+        - 'traefik.http.routers.test-hack-nextjs.rule=Host(`ryazan-market.ru`) || Host(`www.ryazan-market.ru`)'
+        - 'traefik.http.routers.test-hack-nextjs.entrypoints=https,http'
+        - 'traefik.http.routers.test-hack-nextjs.tls.certresolver=myresolver'
+        - 'traefik.http.services.test-hack-nextjs.loadbalancer.server.port=3000'
+        - 'traefik.http.routers.test-hack-nextjs.tls=true'
+        - 'traefik.docker.network=traefik-swarm'
+        - 'traefik.docker.lbswarm=true'
+        - 'traefik.http.routers.test-hack-nextjs.service=test-hack-nextjs'
 
       replicas: 2
       update_config:
@@ -37,7 +36,7 @@ services:
         window: 120s
 
     networks:
-      - "traefik"
+      - 'traefik'
 
 networks:
   traefik:

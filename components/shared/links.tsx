@@ -3,7 +3,7 @@
 import { cn } from '@/lib/utils'
 import { UserRole } from '@/shared/api/user/types'
 import { useUser } from '@/shared/store/useUser'
-import { FileSliders } from 'lucide-react'
+import { FileSliders, ShoppingBag } from 'lucide-react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import React from 'react'
@@ -13,7 +13,6 @@ import { Title } from './title'
 const links = [
   { href: '/catalog', text: 'Каталог' },
   { href: '/profile', text: 'Профиль', loggedIn: true, notRoot: true },
-  { href: '/lk', text: 'Личный кабинет', loggedIn: true },
   { href: '/login', text: 'Профиль', loggedIn: false }
 ]
 
@@ -34,6 +33,8 @@ export const Links: React.FC<Props> = ({ className }) => {
 
   const isAdminAccessed = user.role === UserRole.AGENT || user.role === UserRole.ROOT
   const adminLink = user.role === UserRole.ROOT ? '/admin' : '/agent'
+
+  const isSellerAccessed = user.role === UserRole.SELLER
 
   return (
     <Container
@@ -68,6 +69,21 @@ export const Links: React.FC<Props> = ({ className }) => {
           >
             <FileSliders />
             Админ-панель
+          </Title>
+        </Link>
+      )}
+
+      {isSellerAccessed && (
+        <Link href="/seller-dashboard">
+          <Title
+            size="xs"
+            className={cn('flex flex-row gap-1 items-center', {
+              underline: pathname.startsWith('/seller-dashboard'),
+              'bg-transparent': !pathname.startsWith('/seller-dashboard')
+            })}
+          >
+            <ShoppingBag />
+            Панель продавца
           </Title>
         </Link>
       )}
