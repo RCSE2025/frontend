@@ -13,7 +13,8 @@ import { Title } from './title'
 const links = [
   { href: '/catalog', text: 'Каталог' },
   { href: '/profile', text: 'Профиль', loggedIn: true, notRoot: true },
-  { href: '/login', text: 'Профиль', loggedIn: false }
+  { href: '/login', text: 'Авторизация', loggedIn: false },
+  { href: '/sign-up', text: 'Регистрация', loggedIn: false }
 ]
 
 interface Props {
