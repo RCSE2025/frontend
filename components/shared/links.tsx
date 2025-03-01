@@ -32,7 +32,7 @@ export const Links: React.FC<Props> = ({ className }) => {
   // }, [fetchUser, updateLoggedIn])
 
   const isAdminAccessed = user.role === UserRole.AGENT || user.role === UserRole.ROOT
-  const adminLink = user.role === UserRole.ROOT ? '/root' : '/agent'
+  const adminLink = user.role === UserRole.ROOT ? '/admin' : '/agent'
 
   const isSellerAccessed = user.role === UserRole.SELLER
 
