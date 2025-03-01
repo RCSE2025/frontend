@@ -1,7 +1,17 @@
 export enum UserRole {
-  SPORTSMAN = 'SPORTSMAN',
-  AGENT = 'AGENT',
-  ROOT = 'ROOT'
+  USER = 'user',
+  SUPPORT = 'support',
+  ROOT = 'admin',
+  SELLER = 'business',
+  SELF_EMPLOYED = 'self-employed'
+}
+
+export const userRoleMap: Record<UserRole, string> = {
+  [UserRole.USER]: 'Покупатель',
+  [UserRole.SUPPORT]: 'Поддержка',
+  [UserRole.ROOT]: 'Администратор',
+  [UserRole.SELLER]: 'Юрлицо',
+  [UserRole.SELF_EMPLOYED]: 'Самозанятый'
 }
 
 export interface User {
@@ -11,6 +21,7 @@ export interface User {
   email: string
   patronymic: string
   date_of_birth: Date
+  is_pasport_verified: boolean
   role: string
 }
 
@@ -29,11 +40,12 @@ export interface SignupRequest {
 }
 
 export interface UpdateUserRequest {
-  name: string
-  surname: string
-  patronymic: string
-  email: string
-  date_of_birth: Date
+  name?: string
+  surname?: string
+  patronymic?: string
+  email?: string
+  date_of_birth?: Date
+  role?: UserRole
 }
 
 export interface ResetPassword {

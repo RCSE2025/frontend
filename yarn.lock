@@ -2480,6 +2480,11 @@
     "@types/d3-interpolate" "^2"
     "@types/d3-selection" "^2"
 
+"@types/dadata-api@^0.0.3":
+  version "0.0.3"
+  resolved "https://registry.yarnpkg.com/@types/dadata-api/-/dadata-api-0.0.3.tgz#ae925663e247c3df0ef97a8852d1549fef350b5b"
+  integrity sha512-gBMCyfjPJItZppEw0PV35YW5KPJ5dts9PCuiKDUpYMDydFQIg1Nqss6x5fVbj0jfkK5XsvU9oCrmUxXDN16D7A==
+
 "@types/date-arithmetic@*":
   version "4.1.4"
   resolved "https://registry.npmjs.org/@types/date-arithmetic/-/date-arithmetic-4.1.4.tgz"
