@@ -86,9 +86,9 @@ export const resetPassword = async (request: ResetPassword) => {
 }
 
 export const sendResetPasswordEmail = async (email: string) => {
-  const formData = new FormData()
-
-  formData.append('email', email)
-
-  await http.post('/user/email/send/password', formData)
+  await http.post('/user/password/reset/email', null, {
+    params: {
+      email
+    }
+  })
 }
