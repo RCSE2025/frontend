@@ -12,7 +12,6 @@ import { Title } from './title'
 
 const links = [
   { href: '/catalog', text: 'Каталог' },
-  { href: '/calendar', text: 'Календарь' },
   { href: '/profile', text: 'Профиль', loggedIn: true, notRoot: true },
   { href: '/lk', text: 'Личный кабинет', loggedIn: true },
   { href: '/login', text: 'Профиль', loggedIn: false }

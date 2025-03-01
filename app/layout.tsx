@@ -1,6 +1,5 @@
 import { Header } from '@/components/shared/header'
 import { Links } from '@/components/shared/links'
-import { ThemeProvider } from '@/components/shared/theme-provider'
 import { ThemeToggle } from '@/components/shared/theme-toggle'
 import { Toaster as Sonner } from '@/components/ui/sonner'
 import { cn } from '@/lib/utils'
@@ -8,8 +7,8 @@ import type { Metadata, Viewport } from 'next'
 import { Inter } from 'next/font/google'
 import Image from 'next/image'
 import Link from 'next/link'
-import './globals.css'
 import React from 'react'
+import './globals.css'
 
 const inter = Inter({ subsets: ['latin', 'cyrillic'] })
 
@@ -35,34 +34,31 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={cn(inter.className, 'bg-secondary-background')}>
-        <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
-          <Sonner />
-          <Header className="bg-background">
-            <Link href="/" className="flex items-center gap-2">
-              <Image
-                src="/logo.svg"
-                alt="FSPHub Logo"
-                width={32}
-                height={32}
-                priority
-                className="dark:hidden"
-              />
-              <Image
-                src="/logo.svg"
-                alt="FSPHub Logo"
-                width={32}
-                height={32}
-                priority
-                className="hidden dark:block"
-              />
-            </Link>
-            <div className="flex items-center justify-between gap-5 flex-col md:flex-row">
-              <Links />
-              <ThemeToggle />
-            </div>
-          </Header>
-          <main className="min-h-[calc(100vh-78px)]">{children}</main> {modal}
-        </ThemeProvider>
+        <Sonner />
+        <Header className="bg-background">
+          <Link href="/" className="flex items-center gap-2">
+            <Image
+              src="/logo.svg"
+              alt="FSPHub Logo"
+              width={32}
+              height={32}
+              priority
+              className="dark:hidden"
+            />
+            <Image
+              src="/logo.svg"
+              alt="FSPHub Logo"
+              width={32}
+              height={32}
+              priority
+              className="hidden dark:block"
+            />
+          </Link>
+          <div className="flex items-center justify-between gap-5 flex-col md:flex-row">
+            <Links />
+          </div>
+        </Header>
+        <main className="min-h-[calc(100vh-78px)]">{children}</main> {modal}
       </body>
     </html>
   )
