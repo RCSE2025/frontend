@@ -1,10 +1,9 @@
 import { create } from 'zustand'
 import { API } from '../api'
-import { Ticket, TicketFilters } from '../types'
 import {
   AddTicketCommentRequest,
   CreateTicketRequest,
-  GetTicketsResponse,
+  Ticket,
   UpdateTicketRequest
 } from '../api/ticket/types'
 
@@ -14,21 +13,19 @@ interface ITicketStore {
   totalTickets: number
   loading: boolean
   admins: { id: string; name: string }[]
-  filters: TicketFilters
   page: number
   limit: number
 
-  setFilters: (filters: TicketFilters) => void
   setPage: (page: number) => void
   setLimit: (limit: number) => void
 
   fetchTickets: () => Promise<void>
+  fetchUserTickets: (email: string) => Promise<void>
   fetchTicketById: (id: string) => Promise<void>
   createTicket: (request: CreateTicketRequest) => Promise<void>
   updateTicket: (request: UpdateTicketRequest) => Promise<void>
   deleteTicket: (id: string) => Promise<void>
   addComment: (request: AddTicketCommentRequest) => Promise<void>
-  fetchAdmins: () => Promise<void>
 }
 
 export const useTickets = create<ITicketStore>((set, get) => ({
@@ -41,19 +38,33 @@ export const useTickets = create<ITicketStore>((set, get) => ({
   page: 1,
   limit: 10,
 
-  setFilters: (filters: TicketFilters) => set({ filters, page: 1 }),
   setPage: (page: number) => set({ page }),
   setLimit: (limit: number) => set({ limit, page: 1 }),
 
   fetchTickets: async () => {
-    const { filters, page, limit } = get()
     set({ loading: true })
 
     try {
-      const response: GetTicketsResponse = await API.Ticket.getTickets(filters, page, limit)
-      set({ tickets: response.tickets, totalTickets: response.total, loading: false })
+      const response = await API.Ticket.getTickets()
+      set({ tickets: response, loading: false })
     } catch (error) {
       console.error('Error fetching tickets:', error)
+      set({ loading: false })
+    }
+  },
+
+  fetchUserTickets: async (email: string) => {
+    set({ loading: true })
+
+    try {
+      const response = await API.Ticket.getTickets()
+      const currentUser = await API.User.getUser()
+      set({
+        tickets: response.filter((ticket) => ticket.username === currentUser.email),
+        loading: false
+      })
+    } catch (error) {
+      console.error('Error fetching user tickets:', error)
       set({ loading: false })
     }
   },
@@ -75,7 +86,7 @@ export const useTickets = create<ITicketStore>((set, get) => ({
 
     try {
       await API.Ticket.createTicket(request)
-      await get().fetchTickets()
+      await get().fetchUserTickets(request.username) // Обновляем список тикетов пользователя после создания
     } catch (error) {
       console.error('Error creating ticket:', error)
       set({ loading: false })
@@ -149,15 +160,6 @@ export const useTickets = create<ITicketStore>((set, get) => ({
     } catch (error) {
       console.error('Error adding comment:', error)
       set({ loading: false })
-    }
-  },
-
-  fetchAdmins: async () => {
-    try {
-      const admins = await API.Ticket.getAdmins()
-      set({ admins })
-    } catch (error) {
-      console.error('Error fetching admins:', error)
     }
   }
 }))

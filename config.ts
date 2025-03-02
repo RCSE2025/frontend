@@ -1,4 +1,5 @@
 export const USERS_API = 'https://api.ryazan-market.ru'
+export const TICKET_SYSTEM = 'https://ticket-system.ryazan-market.ru/api/v1/'
 export const MANIFEST =
   'https://gist.githubusercontent.com/atrepalin/ed4ed932cd297e36d0446e726efb000a/raw/1b25427813c1f34c34855e520dc0f78b86995f58/manifest.json'
 export const TON_PRICE = 294.54
