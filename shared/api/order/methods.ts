@@ -3,7 +3,7 @@ import { CreateOrderRequest, Order, OrderFilterOptions, UpdateOrderStatusRequest
 
 export const getOrders = async (filters?: OrderFilterOptions): Promise<Order[]> => {
   try {
-    const response = await http.get('/orders', { params: filters })
+    const response = await http.get('/order', { params: filters })
     return response.data
   } catch (e: any) {
     throw e
@@ -30,7 +30,9 @@ export const createOrder = async (request: CreateOrderRequest): Promise<Order> =
 
 export const updateOrderStatus = async (request: UpdateOrderStatusRequest): Promise<Order> => {
   try {
-    const response = await http.patch(`/orders/${request.orderId}/status`, { status: request.status })
+    const response = await http.patch(`/orders/${request.orderId}/status`, {
+      status: request.status
+    })
     return response.data
   } catch (e: any) {
     throw e

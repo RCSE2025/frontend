@@ -3,12 +3,32 @@
 import { useState, useEffect } from 'react'
 import { useOrder } from '@/shared/store/useOrder'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow
+} from '@/components/ui/table'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog'
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger
+} from '@/components/ui/dialog'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue
+} from '@/components/ui/select'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Separator } from '@/components/ui/separator'
@@ -22,14 +42,17 @@ import { cn } from '@/lib/utils'
 
 // Функция для форматирования статуса заказа
 const formatOrderStatus = (status: OrderStatus) => {
-  const statusMap: Record<OrderStatus, { label: string; variant: 'default' | 'secondary' | 'destructive' | 'outline' | 'success' }> = {
+  const statusMap: Record<
+    OrderStatus,
+    { label: string; variant: 'default' | 'secondary' | 'destructive' | 'outline' | 'success' }
+  > = {
     [OrderStatus.PENDING]: { label: 'Ожидает обработки', variant: 'secondary' },
     [OrderStatus.PROCESSING]: { label: 'В обработке', variant: 'default' },
     [OrderStatus.SHIPPED]: { label: 'Отправлен', variant: 'success' },
     [OrderStatus.DELIVERED]: { label: 'Доставлен', variant: 'success' },
     [OrderStatus.CANCELLED]: { label: 'Отменен', variant: 'destructive' }
   }
-  
+
   return statusMap[status] || { label: status, variant: 'default' }
 }
 
@@ -41,16 +64,16 @@ function OrderDetails({ order }: { order: Order }) {
         <div>
           <h3 className="text-lg font-medium">Заказ #{order.id}</h3>
           <p className="text-sm text-muted-foreground">
-            {format(new Date(order.createdAt), 'PPP', { locale: ru })}
+            {format(new Date(order.created_at), 'PPP', { locale: ru })}
           </p>
         </div>
         <Badge variant={formatOrderStatus(order.status).variant as any}>
           {formatOrderStatus(order.status).label}
         </Badge>
       </div>
-      
+
       <Separator />
-      
+
       <div>
         <h4 className="font-medium mb-2">Товары</h4>
         <Table>
@@ -67,9 +90,9 @@ function OrderDetails({ order }: { order: Order }) {
               <TableRow key={item.id}>
                 <TableCell className="font-medium">
                   <div className="flex items-center space-x-3">
-                    <img 
-                      src={item.image} 
-                      alt={item.productName} 
+                    <img
+                      src={item.image}
+                      alt={item.productName}
                       className="h-10 w-10 rounded object-cover"
                     />
                     <span>{item.productName}</span>
@@ -77,17 +100,21 @@ function OrderDetails({ order }: { order: Order }) {
                 </TableCell>
                 <TableCell className="text-right">{item.price.toLocaleString()} ₽</TableCell>
                 <TableCell className="text-right">{item.quantity}</TableCell>
-                <TableCell className="text-right">{(item.price * item.quantity).toLocaleString()} ₽</TableCell>
+                <TableCell className="text-right">
+                  {(item.price * item.quantity).toLocaleString()} ₽
+                </TableCell>
               </TableRow>
             ))}
             <TableRow>
-              <TableCell colSpan={3} className="text-right font-medium">Итого:</TableCell>
-              <TableCell className="text-right font-bold">{order.totalAmount.toLocaleString()} ₽</TableCell>
+              <TableCell colSpan={3} className="text-right font-medium">
+                Итого:
+              </TableCell>
+              {/* <TableCell className="text-right font-bold">{order.totalAmount.toLocaleString()} ₽</TableCell> */}
             </TableRow>
           </TableBody>
         </Table>
       </div>
-      
+
       <div className="grid grid-cols-2 gap-6">
         <div>
           <h4 className="font-medium mb-2">Информация о доставке</h4>
@@ -103,7 +130,7 @@ function OrderDetails({ order }: { order: Order }) {
           <p className="text-sm">{order.paymentMethod}</p>
         </div>
       </div>
-      
+
       {order.status === OrderStatus.PENDING && (
         <div className="flex justify-end">
           <Button variant="destructive">Отменить заказ</Button>
@@ -114,10 +141,24 @@ function OrderDetails({ order }: { order: Order }) {
 }
 
 export function OrderHistory() {
-  const { orders, loading, error, fetchOrders, sortOrdersByDate, sortOrdersByAmount, filterOrdersByStatus, filterOrdersByDateRange, filterOrdersByAmountRange, resetFilters } = useOrder()
+  const {
+    orders,
+    loading,
+    error,
+    fetchOrders,
+    // sortOrdersByDate,
+    // sortOrdersByAmount,
+    filterOrdersByStatus,
+    filterOrdersByDateRange,
+    filterOrdersByAmountRange,
+    resetFilters
+  } = useOrder()
   const [selectedOrder, setSelectedOrder] = useState<Order | null>(null)
   const [isDetailsOpen, setIsDetailsOpen] = useState(false)
-  const [sortConfig, setSortConfig] = useState<{ key: 'date' | 'amount', direction: 'asc' | 'desc' } | null>(null)
+  const [sortConfig, setSortConfig] = useState<{
+    key: 'date' | 'amount'
+    direction: 'asc' | 'desc'
+  } | null>(null)
   const [filterStatus, setFilterStatus] = useState<OrderStatus | ''>('')
   const [startDate, setStartDate] = useState<Date | undefined>(undefined)
   const [endDate, setEndDate] = useState<Date | undefined>(undefined)
@@ -131,18 +172,18 @@ export function OrderHistory() {
 
   const handleSort = (key: 'date' | 'amount') => {
     let direction: 'asc' | 'desc' = 'desc'
-    
+
     if (sortConfig && sortConfig.key === key && sortConfig.direction === 'desc') {
       direction = 'asc'
     }
-    
+
     setSortConfig({ key, direction })
-    
-    if (key === 'date') {
-      sortOrdersByDate(direction === 'asc')
-    } else if (key === 'amount') {
-      sortOrdersByAmount(direction === 'asc')
-    }
+
+    // if (key === 'date') {
+    //   sortOrdersByDate(direction === 'asc')
+    // } else if (key === 'amount') {
+    //   sortOrdersByAmount(direction === 'asc')
+    // }
   }
 
   const handleStatusFilter = (status: OrderStatus | '') => {
@@ -168,7 +209,7 @@ export function OrderHistory() {
   const handleAmountFilter = () => {
     const min = minAmount ? parseFloat(minAmount) : null
     const max = maxAmount ? parseFloat(maxAmount) : null
-    
+
     if (min !== null || max !== null) {
       filterOrdersByAmountRange(min, max)
     } else {
@@ -195,7 +236,11 @@ export function OrderHistory() {
     if (!sortConfig || sortConfig.key !== key) {
       return null
     }
-    return sortConfig.direction === 'asc' ? <ChevronUp className="h-4 w-4" /> : <ChevronDown className="h-4 w-4" />
+    return sortConfig.direction === 'asc' ? (
+      <ChevronUp className="h-4 w-4" />
+    ) : (
+      <ChevronDown className="h-4 w-4" />
+    )
   }
 
   return (
@@ -205,14 +250,12 @@ export function OrderHistory() {
           <div className="flex justify-between items-center">
             <div>
               <CardTitle>История покупок</CardTitle>
-              <CardDescription>
-                Просмотр и управление вашими заказами
-              </CardDescription>
+              <CardDescription>Просмотр и управление вашими заказами</CardDescription>
             </div>
-            <Button variant="outline" size="sm" onClick={() => setIsFilterOpen(!isFilterOpen)}>
+            {/* <Button variant="outline" size="sm" onClick={() => setIsFilterOpen(!isFilterOpen)}>
               <FilterIcon className="h-4 w-4 mr-2" />
               Фильтры
-            </Button>
+            </Button> */}
           </div>
         </CardHeader>
         <CardContent>
@@ -222,7 +265,10 @@ export function OrderHistory() {
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                 <div>
                   <Label htmlFor="status-filter">Статус заказа</Label>
-                  <Select value={filterStatus} onValueChange={(value) => handleStatusFilter(value as OrderStatus | '')}>
+                  <Select
+                    value={filterStatus}
+                    onValueChange={(value) => handleStatusFilter(value as OrderStatus | '')}
+                  >
                     <SelectTrigger id="status-filter">
                       <SelectValue placeholder="Все статусы" />
                     </SelectTrigger>
@@ -236,21 +282,21 @@ export function OrderHistory() {
                     </SelectContent>
                   </Select>
                 </div>
-                
+
                 <div>
                   <Label>Период</Label>
                   <div className="flex space-x-2">
                     <Popover>
                       <PopoverTrigger asChild>
                         <Button
-                          variant={"outline"}
+                          variant={'outline'}
                           className={cn(
-                            "w-full justify-start text-left font-normal",
-                            !startDate && "text-muted-foreground"
+                            'w-full justify-start text-left font-normal',
+                            !startDate && 'text-muted-foreground'
                           )}
                         >
                           <CalendarIcon className="mr-2 h-4 w-4" />
-                          {startDate ? format(startDate, "P", { locale: ru }) : <span>От</span>}
+                          {startDate ? format(startDate, 'P', { locale: ru }) : <span>От</span>}
                         </Button>
                       </PopoverTrigger>
                       <PopoverContent className="w-auto p-0">
@@ -265,14 +311,14 @@ export function OrderHistory() {
                     <Popover>
                       <PopoverTrigger asChild>
                         <Button
-                          variant={"outline"}
+                          variant={'outline'}
                           className={cn(
-                            "w-full justify-start text-left font-normal",
-                            !endDate && "text-muted-foreground"
+                            'w-full justify-start text-left font-normal',
+                            !endDate && 'text-muted-foreground'
                           )}
                         >
                           <CalendarIcon className="mr-2 h-4 w-4" />
-                          {endDate ? format(endDate, "P", { locale: ru }) : <span>До</span>}
+                          {endDate ? format(endDate, 'P', { locale: ru }) : <span>До</span>}
                         </Button>
                       </PopoverTrigger>
                       <PopoverContent className="w-auto p-0">
@@ -289,7 +335,7 @@ export function OrderHistory() {
                     Применить
                   </Button>
                 </div>
-                
+
                 <div>
                   <Label>Сумма заказа</Label>
                   <div className="flex space-x-2">
@@ -311,7 +357,7 @@ export function OrderHistory() {
                   </Button>
                 </div>
               </div>
-              
+
               <div className="flex justify-between mt-4">
                 <Button variant="outline" size="sm" onClick={handleResetFilters}>
                   Сбросить все фильтры
@@ -322,11 +368,13 @@ export function OrderHistory() {
               </div>
             </div>
           )}
-          
+
           {loading ? (
             <div className="text-center py-4">Загрузка заказов...</div>
           ) : error ? (
-            <div className="text-center py-4 text-red-500">Ошибка при загрузке заказов: {error}</div>
+            <div className="text-center py-4 text-red-500">
+              Ошибка при загрузке заказов: {error}
+            </div>
           ) : orders.length === 0 ? (
             <div className="text-center py-8">
               <p className="text-muted-foreground">У вас пока нет заказов</p>
@@ -337,43 +385,44 @@ export function OrderHistory() {
                 <TableRow>
                   <TableHead>№ заказа</TableHead>
                   <TableHead>
-                    <button 
-                      className="flex items-center space-x-1"
-                      onClick={() => handleSort('date')}
-                    >
-                      <span>Дата</span>
-                      {getSortIcon('date')}
-                    </button>
+                    <span>Дата</span>
                   </TableHead>
                   <TableHead>Статус</TableHead>
                   <TableHead>
-                    <button 
-                      className="flex items-center space-x-1"
-                      onClick={() => handleSort('amount')}
-                    >
-                      <span>Сумма</span>
-                      {getSortIcon('amount')}
-                    </button>
+                    <span>Сумма</span>
+                    {/* {getSortIcon('amount')} */}
                   </TableHead>
-                  <TableHead className="text-right">Действия</TableHead>
+                  {/* <TableHead className="text-right">Действия</TableHead> */}
                 </TableRow>
               </TableHeader>
               <TableBody>
                 {orders.map((order) => (
-                  <TableRow key={order.id} className="cursor-pointer hover:bg-muted/50" onClick={() => handleOrderClick(order)}>
+                  <TableRow
+                    key={order.id}
+                    className="cursor-pointer hover:bg-muted/50"
+                    onClick={() => handleOrderClick(order)}
+                  >
                     <TableCell className="font-medium">#{order.id}</TableCell>
-                    <TableCell>{format(new Date(order.createdAt), 'dd.MM.yyyy', { locale: ru })}</TableCell>
+                    <TableCell>
+                      {format(new Date(order.created_at), 'dd.MM.yyyy', { locale: ru })}
+                    </TableCell>
                     <TableCell>
                       <Badge variant={formatOrderStatus(order.status).variant as any}>
                         {formatOrderStatus(order.status).label}
                       </Badge>
                     </TableCell>
-                    <TableCell>{order.totalAmount.toLocaleString()} ₽</TableCell>
-                    <TableCell className="text-right">
+                    <TableCell>
+                      {order.order_items.reduce(
+                        (acc, item) => acc + item.product.price * item.order_item.quantity,
+                        0
+                      )}{' '}
+                      ₽
+                    </TableCell>
+                    {/* <TableCell className="text-right">
                       <Button variant="ghost" size="sm">
                         Подробнее
                       </Button>
-                    </TableCell>
+                    </TableCell> */}
                   </TableRow>
                 ))}
               </TableBody>
@@ -381,16 +430,14 @@ export function OrderHistory() {
           )}
         </CardContent>
       </Card>
-      
+
       <Dialog open={isDetailsOpen} onOpenChange={setIsDetailsOpen}>
         <DialogContent className="max-w-3xl">
           <DialogHeader>
             <DialogTitle>Детали заказа</DialogTitle>
-            <DialogDescription>
-              Полная информация о вашем заказе
-            </DialogDescription>
+            <DialogDescription>Полная информация о вашем заказе</DialogDescription>
           </DialogHeader>
-          {selectedOrder && <OrderDetails order={selectedOrder} />}
+          {/* {selectedOrder && <OrderDetails order={selectedOrder} />} */}
         </DialogContent>
       </Dialog>
     </div>
