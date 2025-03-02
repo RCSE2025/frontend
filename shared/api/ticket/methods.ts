@@ -7,7 +7,7 @@ export const getTickets = async (): Promise<Ticket[]> => {
 }
 
 export const createTicket = async (request: CreateTicketRequest): Promise<Ticket> => {
-  const response = await http.post('/tickets', request)
+  const response = await http.post('/tickets/', request)
   return response.data
 }
 
