@@ -17,7 +17,7 @@ export const getTicketById = async (id: string): Promise<Ticket> => {
 }
 
 export const updateTicket = async (request: UpdateTicketRequest): Promise<Ticket> => {
-  const response = await http.put(`/tickets/${request.id}`, request)
+  const response = await http.patch(`/tickets/${request.id}`, request)
   return response.data
 }
 
