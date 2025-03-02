@@ -26,14 +26,8 @@ import {
   TableHeader,
   TableRow
 } from '@/components/ui/table'
+import { TicketPriority, TicketStatus } from '@/shared/api/ticket/types'
 import { useTickets } from '@/shared/store/useTickets'
-import {
-  TicketFilters,
-  TicketPriority,
-  TicketStatus,
-  ticketPriorityMap,
-  ticketStatusMap
-} from '@/shared/types'
 import { format } from 'date-fns'
 import { ru } from 'date-fns/locale'
 import { useEffect, useState } from 'react'
