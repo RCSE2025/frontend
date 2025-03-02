@@ -54,7 +54,8 @@ export function ProductManagement() {
   }, [])
 
   // Функция для фильтрации товаров по статусу
-  const filteredProducts = activeTab === 'all' ? products : products.filter((product) => true)
+  const filteredProducts =
+    activeTab === 'all' ? products : products.filter((product) => product.status === activeTab)
 
   // Функция для открытия диалога добавления товара
   const openAddDialog = () => {
@@ -84,7 +85,7 @@ export function ProductManagement() {
     if (confirm('Вы уверены, что хотите удалить этот товар?')) {
       setProducts(products.filter((product) => product.id !== productId))
 
-      await deleteProduct(productId);
+      await deleteProduct(productId)
     }
   }
 
@@ -197,9 +198,9 @@ export function ProductManagement() {
         <Tabs value={activeTab} onValueChange={setActiveTab} className="w-[400px]">
           <TabsList>
             <TabsTrigger value="all">Все</TabsTrigger>
-            <TabsTrigger value="pending">На модерации</TabsTrigger>
-            <TabsTrigger value="approved">Одобренные</TabsTrigger>
-            <TabsTrigger value="rejected">Отклоненные</TabsTrigger>
+            <TabsTrigger value="consideration">На модерации</TabsTrigger>
+            <TabsTrigger value="approve">Одобренные</TabsTrigger>
+            <TabsTrigger value="reject">Отклоненные</TabsTrigger>
           </TabsList>
         </Tabs>
 
