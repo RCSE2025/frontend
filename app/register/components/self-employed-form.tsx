@@ -48,6 +48,7 @@ export const RegisterSelfEmployedForm: React.FC<Props> = ({ onSubmit, className 
   const { user } = useUser()
 
   React.useEffect(() => {
+    if (!user.inn) return
     form.setValue('inn', user.inn)
   }, [user])
 
