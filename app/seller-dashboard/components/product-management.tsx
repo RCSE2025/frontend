@@ -45,124 +45,8 @@ interface Product extends Omit<IProduct, 'created_at' | 'updated_at'> {
   updated_at: Date
 }
 
-// Моковые данные для демонстрации
-const mockProducts: Product[] = [
-  {
-    id: 1,
-    business_id: 1,
-    title: 'Спортивные кроссовки',
-    description: 'Удобные кроссовки для бега и тренировок',
-    price: 3500,
-    quantity: 100,
-    rating: 4.5,
-    review_count: 10,
-    discount: 0,
-    category: 'SPORTS',
-    brand: 'SportBrand',
-    sku: 'SB-001',
-    estimated_delivery: '3-5 дней',
-    images: [
-      {
-        id: 1,
-        product_id: 1,
-        url: '/images/product1.jpg',
-        is_primary: true,
-        file_uuid: 'uuid1',
-        created_at: new Date('2025-02-15'),
-        updated_at: new Date('2025-02-15')
-      }
-    ],
-    specifications: {
-      id: 1,
-      product_id: 1,
-      name: 'Размер',
-      value: '42',
-      created_at: new Date('2025-02-15'),
-      updated_at: new Date('2025-02-15')
-    },
-    status: 'approved',
-    created_at: new Date('2025-02-15'),
-    updated_at: new Date('2025-02-15')
-  },
-  {
-    id: 2,
-    business_id: 1,
-    title: 'Футбольный мяч',
-    description: 'Профессиональный футбольный мяч',
-    price: 2000,
-    quantity: 50,
-    rating: 0,
-    review_count: 0,
-    discount: 0,
-    category: 'SPORTS',
-    brand: 'SportBrand',
-    sku: 'SB-002',
-    estimated_delivery: '3-5 дней',
-    images: [
-      {
-        id: 2,
-        product_id: 2,
-        url: '/images/product2.jpg',
-        is_primary: true,
-        file_uuid: 'uuid2',
-        created_at: new Date('2025-02-20'),
-        updated_at: new Date('2025-02-20')
-      }
-    ],
-    specifications: {
-      id: 2,
-      product_id: 2,
-      name: 'Размер',
-      value: '5',
-      created_at: new Date('2025-02-20'),
-      updated_at: new Date('2025-02-20')
-    },
-    status: 'pending',
-    created_at: new Date('2025-02-20'),
-    updated_at: new Date('2025-02-20')
-  },
-  {
-    id: 3,
-    business_id: 1,
-    title: 'Теннисная ракетка',
-    description: 'Ракетка для большого тенниса',
-    price: 5000,
-    quantity: 30,
-    rating: 0,
-    review_count: 0,
-    discount: 0,
-    category: 'SPORTS',
-    brand: 'SportBrand',
-    sku: 'SB-003',
-    estimated_delivery: '3-5 дней',
-    images: [
-      {
-        id: 3,
-        product_id: 3,
-        url: '/images/product3.jpg',
-        is_primary: true,
-        file_uuid: 'uuid3',
-        created_at: new Date('2025-02-25'),
-        updated_at: new Date('2025-02-25')
-      }
-    ],
-    specifications: {
-      id: 3,
-      product_id: 3,
-      name: 'Вес',
-      value: '300г',
-      created_at: new Date('2025-02-25'),
-      updated_at: new Date('2025-02-25')
-    },
-    status: 'rejected',
-    rejectionReason: 'Недостаточно информации о товаре',
-    created_at: new Date('2025-02-25'),
-    updated_at: new Date('2025-02-26')
-  }
-]
-
 export function ProductManagement() {
-  const [products, setProducts] = useState<Product[]>(mockProducts)
+  const [products, setProducts] = useState<Product[]>([])
   const [isAddDialogOpen, setIsAddDialogOpen] = useState(false)
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false)
   const [currentProduct, setCurrentProduct] = useState<Product | null>(null)
@@ -358,7 +242,7 @@ export function ProductManagement() {
             </DialogDescription>
           </DialogHeader>
 
-          <ProductForm onSubmit={createProduct} onCancel={() => setIsAddDialogOpen(false)} />
+          <ProductForm onSubmit={handleCreateProduct} onCancel={() => setIsAddDialogOpen(false)} />
         </DialogContent>
       </Dialog>
 
