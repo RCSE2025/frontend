@@ -12,7 +12,7 @@ import {
   SelectValue
 } from '@/components/ui/select'
 import { Textarea } from '@/components/ui/textarea'
-import { FormEvent, useState } from 'react'
+import { FormEvent } from 'react'
 
 interface Props {
   onSubmit: (e: FormEvent<HTMLFormElement>) => void
@@ -47,12 +47,18 @@ export const ProductForm: React.FC<Props> = ({
       <div className="grid grid-cols-2 gap-4 py-4">
         <div className="space-y-2">
           <Label htmlFor="title">Название товара</Label>
-          <Input id="title" name="title" placeholder="Введите название товара" required />
+          <Input
+            id="title"
+            name="title"
+            placeholder="Введите название товара"
+            required
+            defaultValue={data?.title}
+          />
         </div>
 
         <div className="space-y-2">
           <Label htmlFor="category">Категория</Label>
-          <Select name="category" required>
+          <Select name="category" required defaultValue={data?.category}>
             <SelectTrigger>
               <SelectValue placeholder="Выберите категорию" />
             </SelectTrigger>
@@ -113,7 +119,7 @@ export const ProductForm: React.FC<Props> = ({
 
         <div className="space-y-2">
           <Label htmlFor="files">Медиа товара</Label>
-          <Input id="files" name="files" type="file" multiple required />
+          <Input id="files" name="files" type="file" multiple required={!data} />
         </div>
 
         <div className="space-y-2">

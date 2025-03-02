@@ -24,7 +24,7 @@ export const createProduct = async (request: any): Promise<IProduct> => {
 // Обновление существующего товара
 export const updateProduct = async (request: any): Promise<IProduct> => {
   try {
-    const response = await http.put(`/products/${request.id}`, request)
+    const response = await http.put(`/product/${request.id}`, request)
     return response.data
   } catch (error) {
     console.error(`Error updating product with ID ${request.id}:`, error)
@@ -35,7 +35,7 @@ export const updateProduct = async (request: any): Promise<IProduct> => {
 // Удаление товара
 export const deleteProduct = async (productId: number): Promise<void> => {
   try {
-    await http.delete(`/products/${productId}`)
+    await http.delete(`/product/${productId}`)
   } catch (error) {
     console.error(`Error deleting product with ID ${productId}:`, error)
     throw error
