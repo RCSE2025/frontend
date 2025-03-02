@@ -112,7 +112,7 @@ export function AnalyticsModule() {
         </div>
 
         <div className="flex gap-2">
-          <a download={'user-13-business-data.pdf'} href={'/public/user-13-business-data.pdf'}>
+          <a download={'user-13-business-data.pdf'} href={'/user-13-business-data.pdf'}>
             <Button variant="outline" size="sm">
               <Download className="h-4 w-4 mr-2" />
               Экспорт PDF
