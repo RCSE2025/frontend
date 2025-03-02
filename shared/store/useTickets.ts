@@ -58,7 +58,11 @@ export const useTickets = create<ITicketStore>((set, get) => ({
 
     try {
       const response = await API.Ticket.getTickets()
-      set({ tickets: response.filter((ticket) => ticket.username === email), loading: false })
+      const currentUser = await API.User.getUser()
+      set({
+        tickets: response.filter((ticket) => ticket.username === currentUser.email),
+        loading: false
+      })
     } catch (error) {
       console.error('Error fetching user tickets:', error)
       set({ loading: false })
