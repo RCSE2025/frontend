@@ -29,32 +29,37 @@ import {
 } from '@/components/ui/table'
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { Textarea } from '@/components/ui/textarea'
+import { API } from '@/shared/api'
 import { createProduct, uploadProductFiles } from '@/shared/api/business-panel/methods'
 import { IProduct } from '@/shared/api/business-panel/types'
-import { FormEvent, useState } from 'react'
+import { FormEvent, useCallback, useEffect, useState } from 'react'
 import { toast } from 'sonner'
 import { ProductForm } from './product-form'
-
-// Типы для товаров
-type ProductStatus = 'pending' | 'approved' | 'rejected'
-
-interface Product extends Omit<IProduct, 'created_at' | 'updated_at'> {
-  status: ProductStatus
-  rejectionReason?: string
-  created_at: Date
-  updated_at: Date
-}
+import { IProductStatusType } from '@/shared/api/product/types'
+import { useUser } from '@/shared/store/useUser'
+import { userHttp } from '@/shared/api/common'
 
 export function ProductManagement() {
-  const [products, setProducts] = useState<Product[]>([])
+  const [products, setProducts] = useState<IProduct[]>([])
   const [isAddDialogOpen, setIsAddDialogOpen] = useState(false)
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false)
-  const [currentProduct, setCurrentProduct] = useState<Product | null>(null)
+  const [currentProduct, setCurrentProduct] = useState<IProduct | null>(null)
   const [activeTab, setActiveTab] = useState<string>('all')
+  const [businessIdUser, setBusinessIdUser] = useState<number>(0)
+
+  const fetchBusinessIdUser = useCallback(async () => {
+    const response = await userHttp.get('/business/user')
+    return response.data[0]
+  }, [])
+
+  useEffect(() => {
+    const response = await API.Product.getAllProductsWithStatuses()
+    setProducts(response as any)
+  }, [])
 
   // Функция для фильтрации товаров по статусу
   const filteredProducts =
-    activeTab === 'all' ? products : products.filter((product) => product.status === activeTab)
+    activeTab === 'all' ? products : products.filter((product) => product.)
 
   // Функция для открытия диалога добавления товара
   const openAddDialog = () => {
@@ -63,7 +68,7 @@ export function ProductManagement() {
   }
 
   // Функция для открытия диалога редактирования товара
-  const openEditDialog = (product: Product) => {
+  const openEditDialog = (product: IProduct) => {
     setCurrentProduct(product)
     setIsEditDialogOpen(true)
   }
@@ -73,7 +78,7 @@ export function ProductManagement() {
     setProducts(
       products.map((product) =>
         product.id === productId
-          ? { ...product, status: 'pending' as ProductStatus, updated_at: new Date() }
+          ? { ...product, status: 'consideration' as IProductStatusType, updated_at: new Date() }
           : product
       )
     )
@@ -103,7 +108,7 @@ export function ProductManagement() {
         brand: formData.get('brand') as string,
         sku: formData.get('sku') as string,
         estimated_delivery: '3-5 дней',
-        business_id: 1, // Здесь должен быть реальный business_id
+        business_id: 0,
         rating: 0,
         review_count: 0,
         discount: 0

@@ -1,6 +1,16 @@
 import { userHttp as http } from '../common'
 import { IProduct } from '../product'
 
+export const getAllProductsWithStatuses = async (): Promise<IProduct[]> => {
+  try {
+    const response = await http.get('/product')
+    return response.data
+  } catch (error) {
+    console.error('Error creating product:', error)
+    throw error
+  }
+}
+
 export const createProduct = async (request: any): Promise<IProduct> => {
   try {
     const response = await http.post('/product', request)

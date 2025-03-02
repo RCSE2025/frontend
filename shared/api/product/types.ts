@@ -41,6 +41,8 @@ export interface IProductMedia extends IModelBase {
   url: string
 }
 
+export type IProductStatusType = 'consideration' | 'reject' | 'approve'
+
 export interface IProduct extends IModelBase {
   id: number
   business_id: number
@@ -55,6 +57,7 @@ export interface IProduct extends IModelBase {
   brand: string
   sku: string
   estimated_delivery: string
+  status?: IProductStatusType
   images: IProductMedia[]
   specifications: IProductSpecifications[]
   reviews?: IReview[]
