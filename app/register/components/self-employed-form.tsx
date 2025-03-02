@@ -22,6 +22,7 @@ import {
 import { cn } from '@/lib/utils'
 import { z } from '@/lib/zod'
 import { CheckSelfEmployed } from '@/shared/api/business/types'
+import { useUser } from '@/shared/store/useUser'
 import { zodResolver } from '@hookform/resolvers/zod'
 import React from 'react'
 import { useForm } from 'react-hook-form'
@@ -43,6 +44,12 @@ export const RegisterSelfEmployedForm: React.FC<Props> = ({ onSubmit, className 
       country: 'Российская Федерация'
     }
   })
+
+  const { user } = useUser()
+
+  React.useEffect(() => {
+    form.setValue('inn', user.inn)
+  }, [user])
 
   return (
     <Form {...form}>

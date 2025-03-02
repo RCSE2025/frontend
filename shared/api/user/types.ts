@@ -23,6 +23,7 @@ export interface User {
   date_of_birth: Date
   is_pasport_verified: boolean
   role: string
+  inn?: number
 }
 
 export interface LoginRequest {
@@ -46,6 +47,8 @@ export interface UpdateUserRequest {
   email?: string
   date_of_birth?: Date
   role?: UserRole
+  is_pasport_verified?: boolean
+  inn?: number
 }
 
 export interface ResetPassword {
