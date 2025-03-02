@@ -1,5 +1,5 @@
-import { USERS_API } from '../../config'
 import axios from 'axios'
+import { TICKET_SYSTEM, USERS_API } from '../../config'
 
 export const userHttp = axios.create({
   baseURL: USERS_API
@@ -7,6 +7,10 @@ export const userHttp = axios.create({
 
 export const orderHttp = axios.create({
   baseURL: USERS_API
+})
+
+export const ticketHttp = axios.create({
+  baseURL: TICKET_SYSTEM
 })
 
 //

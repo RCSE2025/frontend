@@ -12,13 +12,6 @@ import {
   PaginationPrevious
 } from '@/components/ui/pagination'
 import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue
-} from '@/components/ui/select'
-import {
   Table,
   TableBody,
   TableCell,
@@ -28,50 +21,43 @@ import {
 } from '@/components/ui/table'
 import { TicketStatus, ticketStatusMap } from '@/shared/api/ticket/types'
 import { useTickets } from '@/shared/store/useTickets'
+import { useUser } from '@/shared/store/useUser'
 import { format } from 'date-fns'
 import { ru } from 'date-fns/locale'
 import { useEffect, useMemo, useState } from 'react'
 
-export const TicketList = () => {
-  const { tickets, loading, fetchTickets } = useTickets()
+export const UserTicketList = () => {
+  const { tickets, loading, fetchUserTickets } = useTickets()
+  const { user } = useUser()
   const [searchQuery, setSearchQuery] = useState<string>('')
-  const [statusFilter, setStatusFilter] = useState<TicketStatus | 'all'>('all')
-  const [sortBy, setSortBy] = useState<'created_at-desc' | 'created_at-asc'>('created_at-desc')
   const [page, setPage] = useState(1)
   const limit = 10
 
   useEffect(() => {
-    fetchTickets()
-  }, [fetchTickets])
+    fetchUserTickets(user.email)
+  }, [fetchUserTickets])
 
   const filteredTickets = useMemo(() => {
     let result = [...tickets]
 
-    // Фильтрация по поиску
     if (searchQuery) {
       const query = searchQuery.toLowerCase()
       result = result.filter(
         (ticket) =>
           ticket.title.toLowerCase().includes(query) ||
-          ticket.description.toLowerCase().includes(query) ||
-          ticket.username.toLowerCase().includes(query)
+          ticket.description.toLowerCase().includes(query)
       )
     }
 
-    // Фильтрация по статусу
-    if (statusFilter !== 'all') {
-      result = result.filter((ticket) => ticket.status === statusFilter)
-    }
-
-    // Сортировка
+    // Сортировка по дате создания (сначала новые)
     result.sort((a, b) => {
       const dateA = new Date(a.created_at).getTime()
       const dateB = new Date(b.created_at).getTime()
-      return sortBy === 'created_at-desc' ? dateB - dateA : dateA - dateB
+      return dateB - dateA
     })
 
     return result
-  }, [tickets, searchQuery, statusFilter, sortBy])
+  }, [tickets, searchQuery])
 
   const paginatedTickets = useMemo(() => {
     const startIndex = (page - 1) * limit
@@ -80,17 +66,6 @@ export const TicketList = () => {
   }, [filteredTickets, page, limit])
 
   const totalPages = Math.ceil(filteredTickets.length / limit)
-
-  const handleSearch = () => {
-    setPage(1) // Сброс страницы при поиске
-  }
-
-  const resetFilters = () => {
-    setSearchQuery('')
-    setStatusFilter('all')
-    setSortBy('created_at-desc')
-    setPage(1)
-  }
 
   const getStatusBadgeColor = (status: TicketStatus) => {
     switch (status) {
@@ -107,82 +82,42 @@ export const TicketList = () => {
 
   return (
     <div className="space-y-4">
-      <div className="flex flex-col md:flex-row gap-4">
+      <div className="flex gap-4">
         <Input
-          placeholder="Поиск по тикетам..."
+          placeholder="Поиск по обращениям..."
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
-          className="md:w-1/3"
+          className="max-w-sm"
         />
-
-        <Select
-          value={statusFilter}
-          onValueChange={(value: string) => setStatusFilter(value as TicketStatus | 'all')}
-        >
-          <SelectTrigger className="md:w-1/6">
-            <SelectValue placeholder="Статус" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="all">Все статусы</SelectItem>
-            {Object.entries(ticketStatusMap).map(([key, value]) => (
-              <SelectItem key={key} value={key}>
-                {value}
-              </SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
-        <Select
-          value={sortBy || 'created_at-desc'}
-          onValueChange={(value) => setSortBy(value as 'created_at-desc' | 'created_at-asc')}
-        >
-          <SelectTrigger className="md:w-1/6">
-            <SelectValue placeholder="Сортировка" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="created_at-desc">Сначала новые</SelectItem>
-            <SelectItem value="created_at-asc">Сначала старые</SelectItem>
-          </SelectContent>
-        </Select>
-
-        <div className="flex gap-2">
-          <Button onClick={handleSearch}>Применить</Button>
-          <Button variant="outline" onClick={resetFilters}>
-            Сбросить
-          </Button>
-        </div>
       </div>
 
       <div className="rounded-md border">
         <Table>
           <TableHeader>
             <TableRow>
-              <TableHead>ID</TableHead>
               <TableHead>Заголовок</TableHead>
               <TableHead>Статус</TableHead>
-              <TableHead>Создан</TableHead>
-              <TableHead>Пользователь</TableHead>
+              <TableHead>Создано</TableHead>
               <TableHead>Действия</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
             {loading ? (
               <TableRow>
-                <TableCell colSpan={8} className="text-center py-4">
+                <TableCell colSpan={4} className="text-center py-4">
                   Загрузка...
                 </TableCell>
               </TableRow>
             ) : filteredTickets.length === 0 ? (
               <TableRow>
-                <TableCell colSpan={8} className="text-center py-4">
-                  Тикеты не найдены
+                <TableCell colSpan={4} className="text-center py-4">
+                  Обращения не найдены
                 </TableCell>
               </TableRow>
             ) : (
               paginatedTickets.map((ticket) => (
                 <TableRow key={ticket.id}>
-                  <TableCell className="font-medium">{ticket.id}</TableCell>
                   <TableCell>{ticket.title}</TableCell>
-
                   <TableCell>
                     <Badge className={getStatusBadgeColor(ticket.status)}>
                       {ticketStatusMap[ticket.status as TicketStatus]}
@@ -191,10 +126,9 @@ export const TicketList = () => {
                   <TableCell>
                     {format(new Date(ticket.created_at), 'dd MMM yyyy HH:mm', { locale: ru })}
                   </TableCell>
-                  <TableCell>{ticket.username}</TableCell>
                   <TableCell>
                     <Button variant="outline" size="sm" asChild>
-                      <a href={`/admin/tickets/${ticket.id}`}>Просмотр</a>
+                      <a href={`/profile/tickets/${ticket.id}`}>Просмотр</a>
                     </Button>
                   </TableCell>
                 </TableRow>
