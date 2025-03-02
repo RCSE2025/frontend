@@ -3,6 +3,8 @@
 import { Container } from '@/components/shared/container'
 import { ProductSection } from '@/components/shared/product-section'
 import { Button } from '@/components/ui/button'
+import { getCart, updateQuantity } from '@/shared/api/cart/methods'
+import { GetCartResponse } from '@/shared/api/cart/types'
 import { useCart } from '@/shared/store/useCart'
 import { useRouter } from 'next/navigation'
 import React from 'react'
@@ -10,32 +12,35 @@ import React from 'react'
 export default function Cart() {
   const router = useRouter()
 
-  const testProducts = [
-    {
-      id: '5',
-      title: 'Ультратонкий ноутбук с сенсорным экраном',
-      price: 1299.99,
-      rating: 4.6,
-      quantity: 10,
-      image:
-        'https://images.unsplash.com/photo-1496181133206-80ce9b88a853?q=80&w=2071&auto=format&fit=crop'
-    }
-  ]
+  const [cartProducts, setCartProducts] = React.useState<GetCartResponse[]>([])
 
   const { setProducts, products } = useCart()
 
   React.useEffect(() => {
-    setProducts(Object.fromEntries(testProducts.map((product) => [product.id, product.quantity])))
+    getCart().then(setCartProducts)
   }, [])
 
   React.useEffect(() => {
-    console.log(products)
+    setProducts(
+      Object.fromEntries(cartProducts.map((product) => [product.product.id, product.quantity]))
+    )
+  }, [cartProducts])
+
+  React.useEffect(() => {
+    updateQuantity(products)
   }, [products])
 
   return (
     <Container>
       <Button onClick={() => router.push('/pay')}>Оформить заказ</Button>
-      <ProductSection products={testProducts} title="Корзина" type="cart" />
+      <ProductSection
+        products={cartProducts.map((product) => ({
+          ...product.product,
+          image: product.product.images?.[0]?.url
+        }))}
+        title="Корзина"
+        type="cart"
+      />
     </Container>
   )
 }
