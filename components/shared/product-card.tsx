@@ -5,6 +5,8 @@ import * as React from 'react'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardFooter } from '@/components/ui/card'
 import { cn } from '@/lib/utils'
+import { addProductToCart } from '@/shared/api/cart/methods'
+import { toast } from 'sonner'
 
 interface ProductCardProps extends React.HTMLAttributes<HTMLDivElement> {
   product: {
@@ -30,6 +32,14 @@ export function ProductCard({
   ...props
 }: ProductCardProps) {
   const { id, title, price, rating, image, discount } = product
+
+  const addToCart = async () => {
+    addProductToCart({ product_id: Number(id), quantity: 1 })
+      .then(() => {
+        toast.success('Товар добавлен в корзину')
+      })
+      .catch(() => toast.error('Что-то пошло не так'))
+  }
 
   return (
     <Card className={cn('overflow-hidden', className)} {...props}>
@@ -91,7 +101,9 @@ export function ProductCard({
         </div>
       </CardContent>
       <CardFooter className="p-4 pt-0">
-        <Button className="w-full">В корзину</Button>
+        <Button className="w-full" onClick={addToCart}>
+          В корзину
+        </Button>
       </CardFooter>
     </Card>
   )

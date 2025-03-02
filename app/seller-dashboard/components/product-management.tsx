@@ -33,6 +33,7 @@ import { createProduct, uploadProductFiles } from '@/shared/api/business-panel/m
 import { IProduct } from '@/shared/api/business-panel/types'
 import { FormEvent, useState } from 'react'
 import { toast } from 'sonner'
+import { ProductForm } from './product-form'
 
 // Типы для товаров
 type ProductStatus = 'pending' | 'approved' | 'rejected'
@@ -357,82 +358,7 @@ export function ProductManagement() {
             </DialogDescription>
           </DialogHeader>
 
-          <form onSubmit={handleCreateProduct}>
-            <div className="grid grid-cols-2 gap-4 py-4">
-              <div className="space-y-2">
-                <Label htmlFor="title">Название товара</Label>
-                <Input id="title" name="title" placeholder="Введите название товара" required />
-              </div>
-
-              <div className="space-y-2">
-                <Label htmlFor="category">Категория</Label>
-                <Select name="category" required>
-                  <SelectTrigger>
-                    <SelectValue placeholder="Выберите категорию" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="SPORTS">Спорт</SelectItem>
-                    <SelectItem value="ELECTRONICS">Электроника</SelectItem>
-                    <SelectItem value="HOME">Дом</SelectItem>
-                    <SelectItem value="FASHION">Мода</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-
-              <div className="space-y-2">
-                <Label htmlFor="price">Цена (₽)</Label>
-                <Input id="price" name="price" type="number" placeholder="0" required />
-              </div>
-
-              <div className="space-y-2">
-                <Label htmlFor="quantity">Количество</Label>
-                <Input id="quantity" name="quantity" type="number" placeholder="0" required />
-              </div>
-
-              <div className="space-y-2">
-                <Label htmlFor="brand">Бренд</Label>
-                <Input id="brand" name="brand" placeholder="Введите название бренда" required />
-              </div>
-
-              <div className="space-y-2">
-                <Label htmlFor="sku">Артикул</Label>
-                <Input id="sku" name="sku" placeholder="Введите артикул товара" required />
-              </div>
-
-              <div className="space-y-2">
-                <Label htmlFor="files">Медиа товара</Label>
-                <Input id="files" name="files" type="file" multiple required />
-              </div>
-
-              <div className="space-y-2">
-                <Label htmlFor="estimated_delivery">Срок доставки</Label>
-                <Input
-                  id="estimated_delivery"
-                  name="estimated_delivery"
-                  placeholder="Например: 3-5 дней"
-                  required
-                />
-              </div>
-
-              <div className="col-span-2 space-y-2">
-                <Label htmlFor="description">Описание товара</Label>
-                <Textarea
-                  id="description"
-                  name="description"
-                  placeholder="Введите подробное описание товара"
-                  rows={5}
-                  required
-                />
-              </div>
-            </div>
-
-            <DialogFooter>
-              <Button type="button" variant="outline" onClick={() => setIsAddDialogOpen(false)}>
-                Отмена
-              </Button>
-              <Button type="submit">Добавить</Button>
-            </DialogFooter>
-          </form>
+          <ProductForm onSubmit={createProduct} onCancel={() => setIsAddDialogOpen(false)} />
         </DialogContent>
       </Dialog>
 

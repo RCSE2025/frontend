@@ -14,7 +14,7 @@ export default function Cart() {
 
   const [cartProducts, setCartProducts] = React.useState<GetCartResponse[]>([])
 
-  const { setProducts, products } = useCart()
+  const { setProducts, products, setPrices } = useCart()
 
   React.useEffect(() => {
     getCart().then(setCartProducts)
@@ -23,6 +23,9 @@ export default function Cart() {
   React.useEffect(() => {
     setProducts(
       Object.fromEntries(cartProducts.map((product) => [product.product.id, product.quantity]))
+    )
+    setPrices(
+      Object.fromEntries(cartProducts.map((product) => [product.product.id, product.product.price]))
     )
   }, [cartProducts])
 
