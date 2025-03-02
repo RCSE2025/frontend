@@ -12,10 +12,10 @@ import {
 } from '@/components/ui/select'
 import { Separator } from '@/components/ui/separator'
 import { Textarea } from '@/components/ui/textarea'
+import { TicketComment, TicketStatus, ticketStatusMap } from '@/shared/api/ticket/types'
 import { UserRole } from '@/shared/api/user/types'
 import { useTickets } from '@/shared/store/useTickets'
 import { useUser } from '@/shared/store/useUser'
-import { TicketComment, TicketStatus, ticketStatusMap } from '@/shared/api/ticket/types'
 import { format } from 'date-fns'
 import { ru } from 'date-fns/locale'
 import { useEffect, useState } from 'react'
@@ -57,7 +57,8 @@ export const TicketDetail = ({ ticketId }: TicketDetailProps) => {
 
     await addComment({
       ticketId: currentTicket.id,
-      text: comment
+      text: comment,
+      username: user.role
     })
 
     setComment('')
@@ -178,9 +179,7 @@ export const TicketDetail = ({ ticketId }: TicketDetailProps) => {
             currentTicket.comments.map((comment: TicketComment) => (
               <div key={comment.id} className="p-4 border rounded-lg">
                 <div className="flex justify-between items-center mb-2">
-                  <div className="font-medium flex items-center gap-2">
-                    {comment.username}
-                  </div>
+                  <div className="font-medium flex items-center gap-2">{comment.username}</div>
                   <span className="text-sm text-muted-foreground">
                     {format(new Date(comment.created_at), 'dd MMM yyyy HH:mm', { locale: ru })}
                   </span>
