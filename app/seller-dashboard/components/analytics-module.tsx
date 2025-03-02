@@ -1,84 +1,85 @@
-"use client"
+'use client'
 
-import { useState } from "react"
-import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { DatePicker } from "@/components/shared/date-picker"
-import { 
-  Table, 
-  TableBody, 
-  TableCell, 
-  TableHead, 
-  TableHeader, 
-  TableRow 
-} from "@/components/ui/table"
-import { 
-  BarChart, 
-  Bar, 
-  LineChart, 
-  Line, 
-  XAxis, 
-  YAxis, 
-  CartesianGrid, 
-  Tooltip, 
-  Legend, 
-  ResponsiveContainer, 
-  PieChart, 
-  Pie, 
-  Cell 
-} from "recharts"
-import { Download } from "lucide-react"
+import { DatePicker } from '@/components/shared/date-picker'
+import { Button } from '@/components/ui/button'
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue
+} from '@/components/ui/select'
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow
+} from '@/components/ui/table'
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
+import { Download } from 'lucide-react'
+import Link from 'next/link'
+import { useState } from 'react'
+import {
+  Bar,
+  BarChart,
+  CartesianGrid,
+  Cell,
+  Legend,
+  Line,
+  LineChart,
+  Pie,
+  PieChart,
+  ResponsiveContainer,
+  Tooltip,
+  XAxis,
+  YAxis
+} from 'recharts'
 
 // Моковые данные для графиков
 const salesData = [
-  { name: "Янв", sales: 4000, revenue: 240000 },
-  { name: "Фев", sales: 3000, revenue: 180000 },
-  { name: "Мар", sales: 5000, revenue: 300000 },
-  { name: "Апр", sales: 2780, revenue: 166800 },
-  { name: "Май", sales: 1890, revenue: 113400 },
-  { name: "Июн", sales: 2390, revenue: 143400 },
-  { name: "Июл", sales: 3490, revenue: 209400 },
+  { name: 'Янв', sales: 4000, revenue: 240000 },
+  { name: 'Фев', sales: 3000, revenue: 180000 },
+  { name: 'Мар', sales: 5000, revenue: 300000 },
+  { name: 'Апр', sales: 2780, revenue: 166800 },
+  { name: 'Май', sales: 1890, revenue: 113400 },
+  { name: 'Июн', sales: 2390, revenue: 143400 },
+  { name: 'Июл', sales: 3490, revenue: 209400 }
 ]
 
 const categoryData = [
-  { name: "Обувь", value: 35 },
-  { name: "Одежда", value: 25 },
-  { name: "Спортивный инвентарь", value: 30 },
-  { name: "Аксессуары", value: 10 },
+  { name: 'Обувь', value: 35 },
+  { name: 'Одежда', value: 25 },
+  { name: 'Спортивный инвентарь', value: 30 },
+  { name: 'Аксессуары', value: 10 }
 ]
 
-const COLORS = ["#0088FE", "#00C49F", "#FFBB28", "#FF8042"]
+const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042']
 
 const topProducts = [
-  { id: 1, name: "Спортивные кроссовки", category: "Обувь", sales: 120, revenue: 420000 },
-  { id: 2, name: "Футбольный мяч", category: "Спортивный инвентарь", sales: 85, revenue: 170000 },
-  { id: 3, name: "Теннисная ракетка", category: "Спортивный инвентарь", sales: 64, revenue: 320000 },
-  { id: 4, name: "Спортивный костюм", category: "Одежда", sales: 52, revenue: 260000 },
-  { id: 5, name: "Беговые шорты", category: "Одежда", sales: 45, revenue: 90000 },
+  { id: 1, name: 'Спортивные кроссовки', category: 'Обувь', sales: 120, revenue: 420000 },
+  { id: 2, name: 'Футбольный мяч', category: 'Спортивный инвентарь', sales: 85, revenue: 170000 },
+  {
+    id: 3,
+    name: 'Теннисная ракетка',
+    category: 'Спортивный инвентарь',
+    sales: 64,
+    revenue: 320000
+  },
+  { id: 4, name: 'Спортивный костюм', category: 'Одежда', sales: 52, revenue: 260000 },
+  { id: 5, name: 'Беговые шорты', category: 'Одежда', sales: 45, revenue: 90000 }
 ]
 
 export function AnalyticsModule() {
   const [dateRange, setDateRange] = useState<{ from: Date; to: Date }>({
     from: new Date(new Date().setMonth(new Date().getMonth() - 6)),
-    to: new Date(),
+    to: new Date()
   })
-  
-  const [categoryFilter, setCategoryFilter] = useState<string>("all")
-  const [chartType, setChartType] = useState<string>("sales")
-  
-  // Функция для экспорта данных в CSV
-  const exportToCSV = () => {
-    // В реальном приложении здесь был бы код для формирования и скачивания CSV-файла
-    alert("Экспорт данных в CSV")
-  }
-  
-  // Функция для экспорта данных в PDF
-  const exportToPDF = () => {
-    // В реальном приложении здесь был бы код для формирования и скачивания PDF-файла
-    alert("Экспорт данных в PDF")
-  }
+
+  const [categoryFilter, setCategoryFilter] = useState<string>('all')
+  const [chartType, setChartType] = useState<string>('sales')
 
   return (
     <div className="space-y-6">
@@ -86,16 +87,13 @@ export function AnalyticsModule() {
         <div className="flex flex-col md:flex-row gap-4">
           <div className="w-full md:w-auto">
             <p className="text-sm font-medium mb-1">Период</p>
-            <DatePicker 
-              selection={dateRange} 
-              setSelection={setDateRange} 
-            >
+            <DatePicker selection={dateRange} setSelection={setDateRange}>
               <Button variant="outline" className="w-[240px] justify-start text-left font-normal">
                 {dateRange.from.toLocaleDateString()} - {dateRange.to.toLocaleDateString()}
               </Button>
             </DatePicker>
           </div>
-          
+
           <div className="w-full md:w-[200px]">
             <p className="text-sm font-medium mb-1">Категория</p>
             <Select value={categoryFilter} onValueChange={setCategoryFilter}>
@@ -112,19 +110,17 @@ export function AnalyticsModule() {
             </Select>
           </div>
         </div>
-        
+
         <div className="flex gap-2">
-          <Button variant="outline" size="sm" onClick={exportToCSV}>
-            <Download className="h-4 w-4 mr-2" />
-            Экспорт CSV
-          </Button>
-          <Button variant="outline" size="sm" onClick={exportToPDF}>
-            <Download className="h-4 w-4 mr-2" />
-            Экспорт PDF
-          </Button>
+          <a download={'user-13-business-data.pdf'} href={'/public/user-13-business-data.pdf'}>
+            <Button variant="outline" size="sm">
+              <Download className="h-4 w-4 mr-2" />
+              Экспорт PDF
+            </Button>
+          </a>
         </div>
       </div>
-      
+
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         <Card>
           <CardHeader className="pb-2">
@@ -137,7 +133,7 @@ export function AnalyticsModule() {
             </div>
           </CardContent>
         </Card>
-        
+
         <Card>
           <CardHeader className="pb-2">
             <CardTitle className="text-2xl">366</CardTitle>
@@ -149,7 +145,7 @@ export function AnalyticsModule() {
             </div>
           </CardContent>
         </Card>
-        
+
         <Card>
           <CardHeader className="pb-2">
             <CardTitle className="text-2xl">₽3,415</CardTitle>
@@ -162,29 +158,24 @@ export function AnalyticsModule() {
           </CardContent>
         </Card>
       </div>
-      
+
       <Tabs value={chartType} onValueChange={setChartType}>
         <TabsList className="mb-4">
           <TabsTrigger value="sales">Продажи</TabsTrigger>
           <TabsTrigger value="revenue">Выручка</TabsTrigger>
           <TabsTrigger value="categories">По категориям</TabsTrigger>
         </TabsList>
-        
+
         <TabsContent value="sales" className="mt-0">
           <Card>
             <CardHeader>
               <CardTitle>Динамика продаж</CardTitle>
-              <CardDescription>
-                Количество проданных товаров по месяцам
-              </CardDescription>
+              <CardDescription>Количество проданных товаров по месяцам</CardDescription>
             </CardHeader>
             <CardContent>
               <div className="h-[300px]">
                 <ResponsiveContainer width="100%" height="100%">
-                  <BarChart
-                    data={salesData}
-                    margin={{ top: 5, right: 30, left: 20, bottom: 5 }}
-                  >
+                  <BarChart data={salesData} margin={{ top: 5, right: 30, left: 20, bottom: 5 }}>
                     <CartesianGrid strokeDasharray="3 3" />
                     <XAxis dataKey="name" />
                     <YAxis />
@@ -197,33 +188,28 @@ export function AnalyticsModule() {
             </CardContent>
           </Card>
         </TabsContent>
-        
+
         <TabsContent value="revenue" className="mt-0">
           <Card>
             <CardHeader>
               <CardTitle>Динамика выручки</CardTitle>
-              <CardDescription>
-                Выручка по месяцам (в рублях)
-              </CardDescription>
+              <CardDescription>Выручка по месяцам (в рублях)</CardDescription>
             </CardHeader>
             <CardContent>
               <div className="h-[300px]">
                 <ResponsiveContainer width="100%" height="100%">
-                  <LineChart
-                    data={salesData}
-                    margin={{ top: 5, right: 30, left: 20, bottom: 5 }}
-                  >
+                  <LineChart data={salesData} margin={{ top: 5, right: 30, left: 20, bottom: 5 }}>
                     <CartesianGrid strokeDasharray="3 3" />
                     <XAxis dataKey="name" />
                     <YAxis />
-                    <Tooltip formatter={(value) => [`${value.toLocaleString()} ₽`, "Выручка"]} />
+                    <Tooltip formatter={(value) => [`${value.toLocaleString()} ₽`, 'Выручка']} />
                     <Legend />
-                    <Line 
-                      type="monotone" 
-                      dataKey="revenue" 
-                      stroke="#82ca9d" 
-                      name="Выручка (₽)" 
-                      activeDot={{ r: 8 }} 
+                    <Line
+                      type="monotone"
+                      dataKey="revenue"
+                      stroke="#82ca9d"
+                      name="Выручка (₽)"
+                      activeDot={{ r: 8 }}
                     />
                   </LineChart>
                 </ResponsiveContainer>
@@ -231,14 +217,12 @@ export function AnalyticsModule() {
             </CardContent>
           </Card>
         </TabsContent>
-        
+
         <TabsContent value="categories" className="mt-0">
           <Card>
             <CardHeader>
               <CardTitle>Продажи по категориям</CardTitle>
-              <CardDescription>
-                Распределение продаж по категориям товаров
-              </CardDescription>
+              <CardDescription>Распределение продаж по категориям товаров</CardDescription>
             </CardHeader>
             <CardContent className="flex justify-center">
               <div className="h-[300px] w-full max-w-[500px]">
@@ -258,7 +242,7 @@ export function AnalyticsModule() {
                         <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
                       ))}
                     </Pie>
-                    <Tooltip formatter={(value) => [`${value}%`, "Доля продаж"]} />
+                    <Tooltip formatter={(value) => [`${value}%`, 'Доля продаж']} />
                     <Legend />
                   </PieChart>
                 </ResponsiveContainer>
@@ -267,7 +251,7 @@ export function AnalyticsModule() {
           </Card>
         </TabsContent>
       </Tabs>
-      
+
       <Card>
         <CardHeader>
           <CardTitle>Топ продаваемых товаров</CardTitle>
