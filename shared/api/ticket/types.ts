@@ -1,17 +1,18 @@
 export interface CreateTicketRequest {
   title: string
   description: string
+  status: string
+  username: string
 }
 
 export interface UpdateTicketRequest {
-  id: string
-  status?: TicketStatus
-  assignedToId?: string
+  id: number
+  status: TicketStatus
 }
 
 export interface AddTicketCommentRequest {
   ticketId: string
-  content: string
+  text: string
 }
 
 export enum TicketStatus {
