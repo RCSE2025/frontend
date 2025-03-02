@@ -123,6 +123,7 @@ export interface IProduct extends IModelBase {
   price: number
   title: string
   description: string
+  status?: string
   quantity: number
   rating: number
   review_count: number

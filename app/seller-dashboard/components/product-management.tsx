@@ -6,19 +6,9 @@ import {
   Dialog,
   DialogContent,
   DialogDescription,
-  DialogFooter,
   DialogHeader,
   DialogTitle
 } from '@/components/ui/dialog'
-import { Input } from '@/components/ui/input'
-import { Label } from '@/components/ui/label'
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue
-} from '@/components/ui/select'
 import {
   Table,
   TableBody,
@@ -28,149 +18,43 @@ import {
   TableRow
 } from '@/components/ui/table'
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs'
-import { Textarea } from '@/components/ui/textarea'
-import { createProduct, uploadProductFiles } from '@/shared/api/business-panel/methods'
+import { API } from '@/shared/api'
+import {
+  createProduct,
+  deleteProduct,
+  updateProduct,
+  uploadProductFiles
+} from '@/shared/api/business-panel/methods'
 import { IProduct } from '@/shared/api/business-panel/types'
-import { FormEvent, useState } from 'react'
+import { userHttp } from '@/shared/api/common'
+import { IProductStatusType } from '@/shared/api/product/types'
+import { format } from 'date-fns'
+import { FormEvent, useCallback, useEffect, useState } from 'react'
 import { toast } from 'sonner'
 import { ProductForm } from './product-form'
 
-// Типы для товаров
-type ProductStatus = 'pending' | 'approved' | 'rejected'
-
-interface Product extends Omit<IProduct, 'created_at' | 'updated_at'> {
-  status: ProductStatus
-  rejectionReason?: string
-  created_at: Date
-  updated_at: Date
-}
-
-// Моковые данные для демонстрации
-const mockProducts: Product[] = [
-  {
-    id: 1,
-    business_id: 1,
-    title: 'Спортивные кроссовки',
-    description: 'Удобные кроссовки для бега и тренировок',
-    price: 3500,
-    quantity: 100,
-    rating: 4.5,
-    review_count: 10,
-    discount: 0,
-    category: 'SPORTS',
-    brand: 'SportBrand',
-    sku: 'SB-001',
-    estimated_delivery: '3-5 дней',
-    images: [
-      {
-        id: 1,
-        product_id: 1,
-        url: '/images/product1.jpg',
-        is_primary: true,
-        file_uuid: 'uuid1',
-        created_at: new Date('2025-02-15'),
-        updated_at: new Date('2025-02-15')
-      }
-    ],
-    specifications: {
-      id: 1,
-      product_id: 1,
-      name: 'Размер',
-      value: '42',
-      created_at: new Date('2025-02-15'),
-      updated_at: new Date('2025-02-15')
-    },
-    status: 'approved',
-    created_at: new Date('2025-02-15'),
-    updated_at: new Date('2025-02-15')
-  },
-  {
-    id: 2,
-    business_id: 1,
-    title: 'Футбольный мяч',
-    description: 'Профессиональный футбольный мяч',
-    price: 2000,
-    quantity: 50,
-    rating: 0,
-    review_count: 0,
-    discount: 0,
-    category: 'SPORTS',
-    brand: 'SportBrand',
-    sku: 'SB-002',
-    estimated_delivery: '3-5 дней',
-    images: [
-      {
-        id: 2,
-        product_id: 2,
-        url: '/images/product2.jpg',
-        is_primary: true,
-        file_uuid: 'uuid2',
-        created_at: new Date('2025-02-20'),
-        updated_at: new Date('2025-02-20')
-      }
-    ],
-    specifications: {
-      id: 2,
-      product_id: 2,
-      name: 'Размер',
-      value: '5',
-      created_at: new Date('2025-02-20'),
-      updated_at: new Date('2025-02-20')
-    },
-    status: 'pending',
-    created_at: new Date('2025-02-20'),
-    updated_at: new Date('2025-02-20')
-  },
-  {
-    id: 3,
-    business_id: 1,
-    title: 'Теннисная ракетка',
-    description: 'Ракетка для большого тенниса',
-    price: 5000,
-    quantity: 30,
-    rating: 0,
-    review_count: 0,
-    discount: 0,
-    category: 'SPORTS',
-    brand: 'SportBrand',
-    sku: 'SB-003',
-    estimated_delivery: '3-5 дней',
-    images: [
-      {
-        id: 3,
-        product_id: 3,
-        url: '/images/product3.jpg',
-        is_primary: true,
-        file_uuid: 'uuid3',
-        created_at: new Date('2025-02-25'),
-        updated_at: new Date('2025-02-25')
-      }
-    ],
-    specifications: {
-      id: 3,
-      product_id: 3,
-      name: 'Вес',
-      value: '300г',
-      created_at: new Date('2025-02-25'),
-      updated_at: new Date('2025-02-25')
-    },
-    status: 'rejected',
-    rejectionReason: 'Недостаточно информации о товаре',
-    created_at: new Date('2025-02-25'),
-    updated_at: new Date('2025-02-26')
-  }
-]
-
 export function ProductManagement() {
-  const [products, setProducts] = useState<Product[]>(mockProducts)
+  const [products, setProducts] = useState<IProduct[]>([])
   const [isAddDialogOpen, setIsAddDialogOpen] = useState(false)
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false)
-  const [currentProduct, setCurrentProduct] = useState<Product | null>(null)
+  const [currentProduct, setCurrentProduct] = useState<IProduct | null>(null)
   const [activeTab, setActiveTab] = useState<string>('all')
+  const [businessIdUser, setBusinessIdUser] = useState<number>(0)
+
+  const fetchBusinessIdUser = useCallback(async () => {
+    const response1 = await API.Product.getAllProductsWithStatuses()
+    setProducts(response1 as any)
+
+    const response = await userHttp.get('/business/user')
+    setBusinessIdUser(response.data[0].id)
+  }, [])
+
+  useEffect(() => {
+    fetchBusinessIdUser()
+  }, [])
 
   // Функция для фильтрации товаров по статусу
-  const filteredProducts =
-    activeTab === 'all' ? products : products.filter((product) => product.status === activeTab)
+  const filteredProducts = activeTab === 'all' ? products : products.filter((product) => true)
 
   // Функция для открытия диалога добавления товара
   const openAddDialog = () => {
@@ -179,7 +63,7 @@ export function ProductManagement() {
   }
 
   // Функция для открытия диалога редактирования товара
-  const openEditDialog = (product: Product) => {
+  const openEditDialog = (product: IProduct) => {
     setCurrentProduct(product)
     setIsEditDialogOpen(true)
   }
@@ -189,17 +73,38 @@ export function ProductManagement() {
     setProducts(
       products.map((product) =>
         product.id === productId
-          ? { ...product, status: 'pending' as ProductStatus, updated_at: new Date() }
+          ? { ...product, status: 'consideration' as IProductStatusType, updated_at: new Date() }
           : product
       )
     )
   }
 
   // Функция для удаления товара
-  const deleteProduct = (productId: number) => {
+  const delProduct = async (productId: number) => {
     if (confirm('Вы уверены, что хотите удалить этот товар?')) {
       setProducts(products.filter((product) => product.id !== productId))
+
+      await deleteProduct(productId);
     }
+  }
+
+  const getPayload = (formData: FormData) => {
+    const productData = {
+      title: formData.get('title') as string,
+      description: formData.get('description') as string,
+      price: Number(formData.get('price')),
+      category: formData.get('category') as string,
+      quantity: Number(formData.get('quantity')),
+      brand: formData.get('brand') as string,
+      sku: formData.get('sku') as string,
+      estimated_delivery: '3-5 дней',
+      business_id: businessIdUser,
+      rating: 0,
+      review_count: 0,
+      discount: 0
+    }
+
+    return productData
   }
 
   // Функция для создания нового товара
@@ -210,20 +115,7 @@ export function ProductManagement() {
 
     try {
       // Создаем базовый товар
-      const productData = {
-        title: formData.get('title') as string,
-        description: formData.get('description') as string,
-        price: Number(formData.get('price')),
-        category: formData.get('category') as string,
-        quantity: Number(formData.get('quantity')),
-        brand: formData.get('brand') as string,
-        sku: formData.get('sku') as string,
-        estimated_delivery: '3-5 дней',
-        business_id: 1, // Здесь должен быть реальный business_id
-        rating: 0,
-        review_count: 0,
-        discount: 0
-      }
+      const productData = getPayload(formData)
 
       const newProduct = await createProduct(productData)
 
@@ -242,14 +134,43 @@ export function ProductManagement() {
     }
   }
 
+  const handleUpdateProduct = async (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault()
+    const form = e.currentTarget
+    const formData = new FormData(form)
+
+    try {
+      // Создаем базовый товар
+      const productData = getPayload(formData)
+
+      const newProduct = await updateProduct({
+        ...productData,
+        id: currentProduct!.id
+      })
+
+      // Загружаем изображения
+      // const files = formData.getAll('files') as File[]
+      // await uploadProductFiles({
+      //   files: files,
+      //   productId: newProduct.id
+      // })
+
+      setIsEditDialogOpen(false)
+      toast.success('Товар успешно изменен')
+    } catch (error) {
+      console.error('Error creating product:', error)
+      toast.error('Ошибка при изменении товара')
+    }
+  }
+
   // Функция для получения цвета бейджа статуса
-  const getStatusBadgeVariant = (status: ProductStatus) => {
+  const getStatusBadgeVariant = (status: IProductStatusType) => {
     switch (status) {
-      case 'pending':
+      case 'consideration':
         return 'warning'
-      case 'approved':
+      case 'approve':
         return 'success'
-      case 'rejected':
+      case 'reject':
         return 'destructive'
       default:
         return 'default'
@@ -257,13 +178,13 @@ export function ProductManagement() {
   }
 
   // Функция для получения текста статуса
-  const getStatusText = (status: ProductStatus) => {
+  const getStatusText = (status: IProductStatusType) => {
     switch (status) {
-      case 'pending':
+      case 'consideration':
         return 'На модерации'
-      case 'approved':
+      case 'approve':
         return 'Одобрен'
-      case 'rejected':
+      case 'reject':
         return 'Отклонен'
       default:
         return status
@@ -311,11 +232,11 @@ export function ProductManagement() {
                   <TableCell>{product.category}</TableCell>
                   <TableCell>{product.price} ₽</TableCell>
                   <TableCell>
-                    <Badge variant={getStatusBadgeVariant(product.status) as any}>
-                      {getStatusText(product.status)}
+                    <Badge variant={getStatusBadgeVariant(product.status! as any) as any}>
+                      {getStatusText(product.status as any)}
                     </Badge>
                   </TableCell>
-                  <TableCell>{product.updated_at.toLocaleDateString()}</TableCell>
+                  <TableCell>{format(product.updated_at, 'dd-MM-yyyy')}</TableCell>
                   <TableCell className="text-right">
                     <div className="flex justify-end gap-2">
                       <Button variant="outline" size="sm" onClick={() => openEditDialog(product)}>
@@ -335,7 +256,7 @@ export function ProductManagement() {
                       <Button
                         variant="destructive"
                         size="sm"
-                        onClick={() => deleteProduct(product.id)}
+                        onClick={() => delProduct(product.id)}
                       >
                         Удалить
                       </Button>
@@ -358,7 +279,7 @@ export function ProductManagement() {
             </DialogDescription>
           </DialogHeader>
 
-          <ProductForm onSubmit={createProduct} onCancel={() => setIsAddDialogOpen(false)} />
+          <ProductForm onSubmit={handleCreateProduct} onCancel={() => setIsAddDialogOpen(false)} />
         </DialogContent>
       </Dialog>
 
@@ -369,117 +290,22 @@ export function ProductManagement() {
             <DialogTitle>Редактировать товар</DialogTitle>
             <DialogDescription>
               Внесите изменения в информацию о товаре.
-              {currentProduct?.status === 'rejected' && (
+              {/* {currentProduct?.status === 'rejected' && (
                 <div className="mt-2 p-3 bg-red-50 text-red-800 rounded-md">
                   <strong>Причина отклонения:</strong> {currentProduct.rejectionReason}
                 </div>
-              )}
+              )} */}
             </DialogDescription>
           </DialogHeader>
 
           {currentProduct && (
-            <div className="grid grid-cols-2 gap-4 py-4">
-              <div className="space-y-2">
-                <Label htmlFor="edit-title">Название товара</Label>
-                <Input id="edit-title" defaultValue={currentProduct.title} />
-              </div>
-
-              <div className="space-y-2">
-                <Label htmlFor="edit-category">Категория</Label>
-                <Select defaultValue={currentProduct.category}>
-                  <SelectTrigger>
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="SPORTS">Спорт</SelectItem>
-                    <SelectItem value="ELECTRONICS">Электроника</SelectItem>
-                    <SelectItem value="HOME">Дом</SelectItem>
-                    <SelectItem value="FASHION">Мода</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-
-              <div className="space-y-2">
-                <Label htmlFor="edit-price">Цена (₽)</Label>
-                <Input
-                  id="edit-price"
-                  type="number"
-                  defaultValue={currentProduct.price.toString()}
-                />
-              </div>
-
-              <div className="space-y-2">
-                <Label htmlFor="edit-image">Изображения товара</Label>
-                <div className="flex flex-wrap gap-2 mb-2">
-                  {currentProduct.images.map((image, index) => (
-                    <div key={index} className="relative w-16 h-16 border rounded">
-                      <div className="absolute top-0 right-0 bg-white rounded-full p-1 cursor-pointer">
-                        ✕
-                      </div>
-                    </div>
-                  ))}
-                </div>
-                <Input id="edit-image" type="file" accept="image/*" multiple />
-              </div>
-
-              <div className="col-span-2 space-y-2">
-                <Label htmlFor="edit-description">Описание товара</Label>
-                <Textarea
-                  id="edit-description"
-                  defaultValue={currentProduct.description}
-                  rows={5}
-                />
-              </div>
-
-              <div className="space-y-2">
-                <Label htmlFor="edit-quantity">Количество</Label>
-                <Input
-                  id="edit-quantity"
-                  type="number"
-                  defaultValue={currentProduct.quantity.toString()}
-                />
-              </div>
-
-              <div className="space-y-2">
-                <Label htmlFor="edit-brand">Бренд</Label>
-                <Input id="edit-brand" defaultValue={currentProduct.brand} />
-              </div>
-
-              <div className="space-y-2">
-                <Label htmlFor="edit-sku">Артикул</Label>
-                <Input id="edit-sku" defaultValue={currentProduct.sku} />
-              </div>
-
-              <div className="space-y-2">
-                <Label htmlFor="edit-estimated-delivery">Срок доставки</Label>
-                <Input
-                  id="edit-estimated-delivery"
-                  defaultValue={currentProduct.estimated_delivery}
-                />
-              </div>
-
-              <div className="col-span-2">
-                <h3 className="text-lg font-medium mb-2">Спецификации товара</h3>
-                <div className="grid grid-cols-2 gap-4 mb-2">
-                  <div className="space-y-2">
-                    <Label>Название</Label>
-                    <Input defaultValue={currentProduct.specifications.name} />
-                  </div>
-                  <div className="space-y-2">
-                    <Label>Значение</Label>
-                    <Input defaultValue={currentProduct.specifications.value} />
-                  </div>
-                </div>
-              </div>
-            </div>
+            <ProductForm
+              onSubmit={handleUpdateProduct}
+              onCancel={() => setIsEditDialogOpen(false)}
+              buttonText="Сохранить изменения"
+              data={currentProduct}
+            />
           )}
-
-          <DialogFooter>
-            <Button variant="outline" onClick={() => setIsEditDialogOpen(false)}>
-              Отмена
-            </Button>
-            <Button onClick={() => setIsEditDialogOpen(false)}>Сохранить изменения</Button>
-          </DialogFooter>
         </DialogContent>
       </Dialog>
     </div>
