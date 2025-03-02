@@ -13,6 +13,7 @@ export interface UpdateTicketRequest {
 export interface AddTicketCommentRequest {
   ticketId: string
   text: string
+  username: string
 }
 
 export enum TicketStatus {

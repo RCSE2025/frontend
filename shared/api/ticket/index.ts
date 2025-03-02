@@ -1,5 +1,5 @@
 import * as methods from './methods'
 
-export const Ticket = {
+export const ticketApi = {
   ...methods
 }

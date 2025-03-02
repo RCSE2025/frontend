@@ -1,38 +1,19 @@
 import {
-  mockGetTickets,
-  mockGetTicketById,
-  mockCreateTicket,
-  mockUpdateTicket,
-  mockDeleteTicket,
-  mockAddTicketComment,
-  mockGetAdmins
-} from './tickets'
-
-import {
-  mockSignUp,
-  mockLogIn,
-  mockGetUser,
   mockDeleteUser,
-  mockRefreshToken,
+  mockGetAllUsers,
+  mockGetUser,
+  mockLogIn,
   mockLogOut,
-  mockSendEmail,
-  mockVerifyEmail,
-  mockUpdateUser,
+  mockRefreshToken,
   mockResetPassword,
+  mockSendEmail,
   mockSendResetPasswordEmail,
-  mockGetAllUsers
+  mockSignUp,
+  mockUpdateUser,
+  mockVerifyEmail
 } from './users'
 
 export const MockAPI = {
-  Ticket: {
-    getTickets: mockGetTickets,
-    getTicketById: mockGetTicketById,
-    createTicket: mockCreateTicket,
-    updateTicket: mockUpdateTicket,
-    deleteTicket: mockDeleteTicket,
-    addTicketComment: mockAddTicketComment,
-    getAdmins: mockGetAdmins
-  },
   User: {
     signUp: mockSignUp,
     logIn: mockLogIn,

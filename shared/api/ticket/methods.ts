@@ -27,7 +27,8 @@ export const deleteTicket = async (id: string): Promise<void> => {
 
 export const addTicketComment = async (request: AddTicketCommentRequest): Promise<Ticket> => {
   const response = await http.post(`/tickets/${request.ticketId}/comments`, {
-    text: request.text
+    text: request.text,
+    username: request.username
   })
   return response.data
 }

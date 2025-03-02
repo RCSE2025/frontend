@@ -15,7 +15,7 @@ import { Textarea } from '@/components/ui/textarea'
 import { UserRole } from '@/shared/api/user/types'
 import { useTickets } from '@/shared/store/useTickets'
 import { useUser } from '@/shared/store/useUser'
-import { TicketPriority, TicketStatus, ticketStatusMap } from '@/shared/types'
+import { TicketComment, TicketStatus, ticketStatusMap } from '@/shared/api/ticket/types'
 import { format } from 'date-fns'
 import { ru } from 'date-fns/locale'
 import { useEffect, useState } from 'react'
@@ -25,16 +25,14 @@ interface TicketDetailProps {
 }
 
 export const TicketDetail = ({ ticketId }: TicketDetailProps) => {
-  const { currentTicket, loading, fetchTicketById, updateTicket, addComment, admins, fetchAdmins } =
-    useTickets()
+  const { currentTicket, loading, fetchTicketById, updateTicket, addComment } = useTickets()
   const { user } = useUser()
   const [comment, setComment] = useState('')
   const [status, setStatus] = useState<TicketStatus | null>(null)
 
   useEffect(() => {
     fetchTicketById(ticketId)
-    fetchAdmins()
-  }, [ticketId, fetchTicketById, fetchAdmins])
+  }, [ticketId, fetchTicketById])
 
   useEffect(() => {
     if (currentTicket) {
@@ -48,30 +46,8 @@ export const TicketDetail = ({ ticketId }: TicketDetailProps) => {
 
     if (currentTicket) {
       await updateTicket({
-        id: currentTicket.id,
+        id: Number(currentTicket.id),
         status: newStatus
-      })
-    }
-  }
-
-  const handlePriorityChange = async (value: string) => {
-    const newPriority = value as TicketPriority
-
-    if (currentTicket) {
-      await updateTicket({
-        id: currentTicket.id,
-        priority: newPriority
-      })
-    }
-  }
-
-  const handleAssignedToChange = async (value: string) => {
-    const newAssignedToId = value === 'none' ? null : value
-
-    if (currentTicket) {
-      await updateTicket({
-        id: currentTicket.id,
-        assignedToId: newAssignedToId === null ? undefined : newAssignedToId
       })
     }
   }
@@ -81,7 +57,7 @@ export const TicketDetail = ({ ticketId }: TicketDetailProps) => {
 
     await addComment({
       ticketId: currentTicket.id,
-      content: comment
+      text: comment
     })
 
     setComment('')
@@ -94,19 +70,6 @@ export const TicketDetail = ({ ticketId }: TicketDetailProps) => {
       case TicketStatus.IN_PROGRESS:
         return 'bg-yellow-500'
       case TicketStatus.CLOSED:
-        return 'bg-green-500'
-      default:
-        return 'bg-gray-500'
-    }
-  }
-
-  const getPriorityBadgeColor = (priority: TicketPriority) => {
-    switch (priority) {
-      case TicketPriority.HIGH:
-        return 'bg-red-500'
-      case TicketPriority.MEDIUM:
-        return 'bg-orange-500'
-      case TicketPriority.LOW:
         return 'bg-green-500'
       default:
         return 'bg-gray-500'
@@ -161,7 +124,7 @@ export const TicketDetail = ({ ticketId }: TicketDetailProps) => {
                 </Select>
               ) : (
                 <Badge className={getStatusBadgeColor(currentTicket.status)}>
-                  {ticketStatusMap[currentTicket.status]}
+                  {ticketStatusMap[currentTicket.status as TicketStatus]}
                 </Badge>
               )}
             </div>
@@ -169,14 +132,14 @@ export const TicketDetail = ({ ticketId }: TicketDetailProps) => {
             <div>
               <p className="text-sm font-medium">Создан</p>
               <p>
-                {format(new Date(currentTicket.createdAt), 'dd MMMM yyyy HH:mm', { locale: ru })}
+                {format(new Date(currentTicket.created_at), 'dd MMMM yyyy HH:mm', { locale: ru })}
               </p>
             </div>
 
             <div>
               <p className="text-sm font-medium">Последнее обновление</p>
               <p>
-                {format(new Date(currentTicket.updatedAt), 'dd MMMM yyyy HH:mm', { locale: ru })}
+                {format(new Date(currentTicket.updated_at), 'dd MMMM yyyy HH:mm', { locale: ru })}
               </p>
             </div>
           </CardContent>
@@ -189,11 +152,7 @@ export const TicketDetail = ({ ticketId }: TicketDetailProps) => {
           <CardContent className="space-y-4">
             <div>
               <p className="text-sm font-medium">Имя</p>
-              <p>{currentTicket.userName}</p>
-            </div>
-            <div>
-              <p className="text-sm font-medium">ID пользователя</p>
-              <p>{currentTicket.userId}</p>
+              <p>{currentTicket.username}</p>
             </div>
           </CardContent>
         </Card>
@@ -216,22 +175,17 @@ export const TicketDetail = ({ ticketId }: TicketDetailProps) => {
           {currentTicket.comments.length === 0 ? (
             <p className="text-muted-foreground">Нет комментариев</p>
           ) : (
-            currentTicket.comments.map((comment) => (
+            currentTicket.comments.map((comment: TicketComment) => (
               <div key={comment.id} className="p-4 border rounded-lg">
                 <div className="flex justify-between items-center mb-2">
                   <div className="font-medium flex items-center gap-2">
-                    {comment.userName}
-                    {comment.isAdminComment && (
-                      <Badge variant="outline" className="bg-blue-100">
-                        Администратор
-                      </Badge>
-                    )}
+                    {comment.username}
                   </div>
                   <span className="text-sm text-muted-foreground">
-                    {format(new Date(comment.createdAt), 'dd MMM yyyy HH:mm', { locale: ru })}
+                    {format(new Date(comment.created_at), 'dd MMM yyyy HH:mm', { locale: ru })}
                   </span>
                 </div>
-                <p className="whitespace-pre-wrap">{comment.content}</p>
+                <p className="whitespace-pre-wrap">{comment.text}</p>
               </div>
             ))
           )}

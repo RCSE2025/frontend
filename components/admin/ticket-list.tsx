@@ -26,68 +26,71 @@ import {
   TableHeader,
   TableRow
 } from '@/components/ui/table'
-import { TicketPriority, TicketStatus } from '@/shared/api/ticket/types'
+import { TicketStatus, ticketStatusMap } from '@/shared/api/ticket/types'
 import { useTickets } from '@/shared/store/useTickets'
 import { format } from 'date-fns'
 import { ru } from 'date-fns/locale'
-import { useEffect, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 
 export const TicketList = () => {
-  const {
-    tickets,
-    totalTickets,
-    loading,
-    filters,
-    page,
-    limit,
-    setFilters,
-    setPage,
-    setLimit,
-    fetchTickets
-  } = useTickets()
+  const { tickets, loading, fetchTickets } = useTickets()
   const [searchQuery, setSearchQuery] = useState<string>('')
   const [statusFilter, setStatusFilter] = useState<TicketStatus | 'all'>('all')
-  const [priorityFilter, setPriorityFilter] = useState<TicketPriority | 'all'>('all')
-  const [sortBy, setSortBy] = useState<TicketFilters['sortBy']>('createdAt-desc')
+  const [sortBy, setSortBy] = useState<'created_at-desc' | 'created_at-asc'>('created_at-desc')
+  const [page, setPage] = useState(1)
+  const limit = 10
 
   useEffect(() => {
     fetchTickets()
-  }, [fetchTickets, filters, page, limit])
+  }, [fetchTickets])
+
+  const filteredTickets = useMemo(() => {
+    let result = [...tickets]
+
+    // Фильтрация по поиску
+    if (searchQuery) {
+      const query = searchQuery.toLowerCase()
+      result = result.filter(
+        (ticket) =>
+          ticket.title.toLowerCase().includes(query) ||
+          ticket.description.toLowerCase().includes(query) ||
+          ticket.username.toLowerCase().includes(query)
+      )
+    }
+
+    // Фильтрация по статусу
+    if (statusFilter !== 'all') {
+      result = result.filter((ticket) => ticket.status === statusFilter)
+    }
+
+    // Сортировка
+    result.sort((a, b) => {
+      const dateA = new Date(a.created_at).getTime()
+      const dateB = new Date(b.created_at).getTime()
+      return sortBy === 'created_at-desc' ? dateB - dateA : dateA - dateB
+    })
+
+    return result
+  }, [tickets, searchQuery, statusFilter, sortBy])
+
+  const paginatedTickets = useMemo(() => {
+    const startIndex = (page - 1) * limit
+    const endIndex = startIndex + limit
+    return filteredTickets.slice(startIndex, endIndex)
+  }, [filteredTickets, page, limit])
+
+  const totalPages = Math.ceil(filteredTickets.length / limit)
 
   const handleSearch = () => {
-    const newFilters: TicketFilters = {
-      ...filters,
-      searchQuery
-    }
-
-    if (statusFilter && statusFilter !== 'all') {
-      newFilters.status = [statusFilter]
-    } else {
-      delete newFilters.status
-    }
-
-    if (priorityFilter && priorityFilter !== 'all') {
-      newFilters.priority = [priorityFilter]
-    } else {
-      delete newFilters.priority
-    }
-
-    if (sortBy) {
-      newFilters.sortBy = sortBy
-    }
-
-    setFilters(newFilters)
+    setPage(1) // Сброс страницы при поиске
   }
 
   const resetFilters = () => {
     setSearchQuery('')
     setStatusFilter('all')
-    setPriorityFilter('all')
-    setSortBy('createdAt-desc')
-    setFilters({})
+    setSortBy('created_at-desc')
+    setPage(1)
   }
-
-  const totalPages = Math.ceil(totalTickets / limit)
 
   const getStatusBadgeColor = (status: TicketStatus) => {
     switch (status) {
@@ -96,19 +99,6 @@ export const TicketList = () => {
       case TicketStatus.IN_PROGRESS:
         return 'bg-yellow-500'
       case TicketStatus.CLOSED:
-        return 'bg-green-500'
-      default:
-        return 'bg-gray-500'
-    }
-  }
-
-  const getPriorityBadgeColor = (priority: TicketPriority) => {
-    switch (priority) {
-      case TicketPriority.HIGH:
-        return 'bg-red-500'
-      case TicketPriority.MEDIUM:
-        return 'bg-orange-500'
-      case TicketPriority.LOW:
         return 'bg-green-500'
       default:
         return 'bg-gray-500'
@@ -142,15 +132,15 @@ export const TicketList = () => {
           </SelectContent>
         </Select>
         <Select
-          value={sortBy || 'createdAt-desc'}
-          onValueChange={(value) => setSortBy(value as TicketFilters['sortBy'])}
+          value={sortBy || 'created_at-desc'}
+          onValueChange={(value) => setSortBy(value as 'created_at-desc' | 'created_at-asc')}
         >
           <SelectTrigger className="md:w-1/6">
             <SelectValue placeholder="Сортировка" />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="createdAt-desc">Сначала новые</SelectItem>
-            <SelectItem value="createdAt-asc">Сначала старые</SelectItem>
+            <SelectItem value="created_at-desc">Сначала новые</SelectItem>
+            <SelectItem value="created_at-asc">Сначала старые</SelectItem>
           </SelectContent>
         </Select>
 
@@ -181,27 +171,27 @@ export const TicketList = () => {
                   Загрузка...
                 </TableCell>
               </TableRow>
-            ) : tickets.length === 0 ? (
+            ) : filteredTickets.length === 0 ? (
               <TableRow>
                 <TableCell colSpan={8} className="text-center py-4">
                   Тикеты не найдены
                 </TableCell>
               </TableRow>
             ) : (
-              tickets.map((ticket) => (
+              paginatedTickets.map((ticket) => (
                 <TableRow key={ticket.id}>
-                  <TableCell className="font-medium">{ticket.id.slice(0, 8)}</TableCell>
+                  <TableCell className="font-medium">{ticket.id}</TableCell>
                   <TableCell>{ticket.title}</TableCell>
 
                   <TableCell>
-                    <Badge className={getPriorityBadgeColor(ticket.priority)}>
-                      {ticketPriorityMap[ticket.priority]}
+                    <Badge className={getStatusBadgeColor(ticket.status)}>
+                      {ticketStatusMap[ticket.status as TicketStatus]}
                     </Badge>
                   </TableCell>
                   <TableCell>
-                    {format(new Date(ticket.createdAt), 'dd MMM yyyy HH:mm', { locale: ru })}
+                    {format(new Date(ticket.created_at), 'dd MMM yyyy HH:mm', { locale: ru })}
                   </TableCell>
-                  <TableCell>{ticket.userName}</TableCell>
+                  <TableCell>{ticket.username}</TableCell>
                   <TableCell>
                     <Button variant="outline" size="sm" asChild>
                       <a href={`/admin/tickets/${ticket.id}`}>Просмотр</a>
