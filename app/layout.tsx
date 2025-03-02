@@ -10,6 +10,7 @@ import Link from 'next/link'
 import React, { Suspense } from 'react'
 import './globals.css'
 import { TonProvider } from '@/components/shared/ton'
+import { Bot } from 'lucide-react'
 
 const inter = Inter({ subsets: ['latin', 'cyrillic'] })
 
@@ -65,6 +66,12 @@ export default function RootLayout({
             <main className="min-h-[calc(100vh-78px)]">{children}</main> {modal}
           </Suspense>
         </TonProvider>
+
+        <button className="position fixed bottom-5 right-5">
+          <Link href="/support">
+            <Bot className="w-10 h-10 cursor-pointer bg-white p-2 rounded-full" />
+          </Link>
+        </button>
       </body>
     </html>
   )
