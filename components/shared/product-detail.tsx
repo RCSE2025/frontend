@@ -16,9 +16,15 @@ interface ProductDetailProps {
   product: IProduct
   relatedProducts?: IProduct[]
   className?: string
+  addToCart: (product: IProduct, quantity: number) => void
 }
 
-export function ProductDetail({ product, relatedProducts = [], className }: ProductDetailProps) {
+export function ProductDetail({
+  product,
+  relatedProducts = [],
+  className,
+  addToCart
+}: ProductDetailProps) {
   const [selectedImage, setSelectedImage] = React.useState(
     product.images.find((img) => img) || product.images[0]
   )
@@ -214,7 +220,11 @@ export function ProductDetail({ product, relatedProducts = [], className }: Prod
                   <span className="sr-only">Увеличить количество</span>
                 </Button>
               </div>
-              <Button className="flex-1" disabled={product.quantity === 0}>
+              <Button
+                className="flex-1"
+                disabled={product.quantity === 0}
+                onClick={() => addToCart(product, quantity)}
+              >
                 <ShoppingCart className="mr-2 h-4 w-4" />В корзину
               </Button>
             </div>

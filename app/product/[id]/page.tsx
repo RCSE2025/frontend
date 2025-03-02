@@ -6,6 +6,8 @@ import { useEffect, useState } from 'react'
 import { Container } from '@/components/shared/container'
 import { ProductDetail } from '@/components/shared/product-detail'
 import { IProduct, productApi } from '@/shared/api/product'
+import { addProductToCart } from '@/shared/api/cart/methods'
+import { toast } from 'sonner'
 
 interface ProductPageProps {
   params: {
@@ -70,10 +72,18 @@ export default function ProductPage({ params }: ProductPageProps) {
     notFound()
   }
 
+  const addToCart = async (product: IProduct, quantity: number) => {
+    addProductToCart({ product_id: product.id, quantity })
+      .then(() => {
+        toast.success('Товар добавлен в корзину')
+      })
+      .catch(() => toast.error('Что-то пошло не так'))
+  }
+
   return (
     <Container>
       <div className="py-6">
-        <ProductDetail product={product} relatedProducts={relatedProducts} />
+        <ProductDetail product={product} relatedProducts={relatedProducts} addToCart={addToCart} />
       </div>
     </Container>
   )

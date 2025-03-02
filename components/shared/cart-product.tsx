@@ -55,7 +55,7 @@ export function CartProduct({
               />
             </div>
           </div>
-          {discount && (
+          {!!discount && (
             <div className="absolute top-2 right-2 bg-destructive text-destructive-foreground text-xs font-medium px-2 py-1 rounded">
               -{discount}%
             </div>
@@ -90,7 +90,7 @@ export function CartProduct({
           <span className="font-bold text-lg">
             ₽{discount ? (price * (1 - discount / 100)).toFixed(2) : price.toFixed(2)}
           </span>
-          {discount && (
+          {!!discount && (
             <span className="text-sm text-muted-foreground line-through">₽{price.toFixed(2)}</span>
           )}
         </div>
