@@ -23,6 +23,7 @@ export interface User {
   date_of_birth: Date
   is_pasport_verified: boolean
   role: string
+  inn?: number
 }
 
 export interface LoginRequest {
